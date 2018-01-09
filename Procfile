@@ -1,2 +1,2 @@
 release: python mange.py migrate
-web: gunicorn gettingstarted.wsgi
+web: gunicorn hc.wsgi
