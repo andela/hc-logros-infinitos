@@ -1,5 +1,9 @@
 # healthchecks
 
+
+
+[![Build Status](https://travis-ci.org/andela/hc-logros-infinitos.svg?branch=develop)](https://travis-ci.org/andela/hc-logros-infinitos)
+
 ![Screenshot of Welcome page](/stuff/screenshots/welcome.png?raw=true "Welcome Page")
 
 ![Screenshot of My Checks page](/stuff/screenshots/my_checks.png?raw=true "My Checks Page")
