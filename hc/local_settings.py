@@ -1,6 +1,5 @@
 import os
 
-SITE_ROOT = "https://hc-logros.herokuapp.com"
 SITE_NAME = "Health Checks"
 DEFAULT_FROM_EMAIL = "healthchecks@example.org"
 
