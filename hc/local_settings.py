@@ -1,7 +1,7 @@
 import os
 
 SITE_NAME = "Health Checks"
-DEFAULT_FROM_EMAIL = "hc-logros-infinitos@andela.com"
+DEFAULT_FROM_EMAIL = "hc-logros-infinitos@gmail.com"
 
 # Email
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
