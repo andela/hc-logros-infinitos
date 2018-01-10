@@ -17,4 +17,4 @@ after_success: coveralls
 cache: pip
 sylvance [12:34 PM] 
 notifications:
-   slack: andela:7BZmoMJWXZetMTME0PoGxR23
+  slack: andela:7BZmoMJWXZetMTME0PoGxR23
