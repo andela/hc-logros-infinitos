@@ -1,7 +1,7 @@
 # healthchecks
 
 [![Build Status](https://travis-ci.org/andela/hc-logros-infinitos.svg?branch=develop)](https://travis-ci.org/andela/hc-logros-infinitos)
-[![Coverage Status](https://coveralls.io/repos/github/andela/hc-logros-infinitos/badge.svg?branch=ch-heroku-153790646)](https://coveralls.io/github/andela/hc-logros-infinitos?branch=ch-heroku-153790646)
+[![Coverage Status](https://coveralls.io/repos/github/andela/hc-logros-infinitos/badge.svg?branch=ch-build-coverage-badges-154167598)](https://coveralls.io/github/andela/hc-logros-infinitos?branch=ch-build-coverage-badges-154167598)
 
 ![Screenshot of Welcome page](/stuff/screenshots/welcome.png?raw=true "Welcome Page")
 
