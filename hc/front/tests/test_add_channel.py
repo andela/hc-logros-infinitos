@@ -1,4 +1,5 @@
 from django.test.utils import override_settings
+from django.contrib.auth.models import User
 
 from hc.api.models import Channel
 from hc.test import BaseTestCase
@@ -39,18 +40,14 @@ class AddChannelTestCase(BaseTestCase):
 
     ### Test that the team access works
     def test_team_access_channel_works(self):
-        url ="/integrations/add/"
-        form = {"kind": "email", "value":"alice@example.org"}
-
-        self.client.login(username="alice@example.org", password="password")
-        r = self.client.post(url, form)
-        q = Channel.objects.filter(value="alice@example.org")
-        self.assertEqual(q.count(), 1)
-        self.client.logout()
+        alice = User.objects.get(email="alice@example.org")
         self.client.login(username="bob@example.org", password="password")
-        q = Channel.objects.filter(value="alice@example.org")
-        url = "/"
-        r = self.client.get(url)
+        url ="/integrations/add/"
+        form = {"kind": "email", "value":"bob@example.org"}
+        r = self.client.post(url, form)
+        self.client.logout()
+        self.client.login(username="alice@example.org", password="password")
+        q = Channel.objects.filter(user= alice, value="bob@example.org")
         self.assertEqual(q.count(), 1)        
         self.assertEqual(r.status_code, 302)
 
