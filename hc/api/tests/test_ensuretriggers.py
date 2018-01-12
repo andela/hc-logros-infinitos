@@ -18,7 +18,7 @@ class EnsureTriggersTestCase(TestCase):
         check.last_ping = timezone.now()
         check.save()
         check.refresh_from_db()
-        assert check.alert_after != ""
+        assert check.alert_after != check.last_ping
         
         ### The above assert fails. Make it pass
 
@@ -28,3 +28,5 @@ class EnsureTriggersTestCase(TestCase):
         check.save()
         check.refresh_from_db()
         ### Assert that alert_after is lesser than the check's alert_after 
+        assert alert_after < check.alert_after
+
