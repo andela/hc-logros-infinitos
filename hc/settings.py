@@ -12,14 +12,14 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 import os
 import warnings
+import dj_database_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 HOST = "localhost"
 SECRET_KEY = "---"
 DEBUG = True
-ALLOWED_HOSTS = []
-DEFAULT_FROM_EMAIL = 'healthchecks@example.org'
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', 'hc-logros.herokuapp.com']
 USE_PAYMENTS = False
 
 
@@ -41,6 +41,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE = (
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -110,6 +111,11 @@ if os.environ.get("DB") == "mysql":
         }
     }
 
+if os.environ.get("HEROKU") == 'TRUE':
+    db_from_env = dj_database_url.config()
+    DATABASES['default'].update(db_from_env)
+
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -120,7 +126,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-SITE_ROOT = "http://localhost:8000"
+SITE_ROOT = "https://hc-logros.herokuapp.com"
+SITE_NAME = "Health Checks"
+DEFAULT_FROM_EMAIL = "hc-logros-infinitos@affiance.ug"
+
 PING_ENDPOINT = SITE_ROOT + "/ping/"
 PING_EMAIL_DOMAIN = HOST
 STATIC_URL = '/static/'
@@ -134,6 +143,13 @@ STATICFILES_FINDERS = (
 COMPRESS_OFFLINE = True
 
 EMAIL_BACKEND = "djmail.backends.default.EmailBackend"
+DJMAIL_REAL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# Email
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
 
 # Slack integration -- override these in local_settings
 SLACK_CLIENT_ID = None
