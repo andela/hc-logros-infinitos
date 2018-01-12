@@ -33,6 +33,7 @@ class ListChecksTestCase(BaseTestCase):
 
     def test_it_works(self):
         r = self.get()
+        assert r.status_code=200
         ### Assert the response status code
 
         doc = r.json()

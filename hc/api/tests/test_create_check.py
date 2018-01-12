@@ -1,4 +1,5 @@
 import json
+from django.utils import timezone
 
 from hc.api.models import Channel, Check
 from hc.test import BaseTestCase
@@ -17,7 +18,8 @@ class CreateCheckTestCase(BaseTestCase):
         if expected_error:
             self.assertEqual(r.status_code, 400)
             ### Assert that the expected error is the response error
-
+            result = r.json()
+            self.assertEqual(result['error'], expected_error)
         return r
 
     def test_it_works(self):
@@ -26,7 +28,7 @@ class CreateCheckTestCase(BaseTestCase):
             "name": "Foo",
             "tags": "bar,baz",
             "timeout": 3600,
-            "grace": 60
+            "grace": 60,
         })
 
         self.assertEqual(r.status_code, 201)
@@ -44,20 +46,27 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(check.tags, "bar,baz")
         self.assertEqual(check.timeout.total_seconds(), 3600)
         self.assertEqual(check.grace.total_seconds(), 60)
+        self.assertEqual(check.n_pings,0)
+        self.assertEqual(check.last_ping,None)
 
     def test_it_accepts_api_key_in_header(self):
-        payload = json.dumps({"name": "Foo"})
+        payload = json.dumps({"api_key": "abc",
+                                "name": "Foo"
+                                })
+        r = self.client.post(self.URL, payload,
+                             content_type="application/json",
+                             HTTP_X_API_KEY="abc")
 
         ### Make the post request and get the response
-        r = {'status_code': 201} ### This is just a placeholder variable
+        #r = {'status_code': 201} ### This is just a placeholder variable
 
-        self.assertEqual(r['status_code'], 201)
+        self.assertEqual(r.status_code, 201)
 
     def test_it_handles_missing_request_body(self):
         ### Make the post request with a missing body and get the response
-        r = {'status_code': 400, 'error': "wrong api_key"} ### This is just a placeholder variable
-        self.assertEqual(r['status_code'], 400)
-        self.assertEqual(r["error"], "wrong api_key")
+        r = self.client.post(self.URL,content_type="application/json")
+        self.assertEqual(r.status_code, 400)
+        self.assertEqual(r['error'], "wrong api_key")
 
     def test_it_handles_invalid_json(self):
         ### Make the post request with invalid json data type

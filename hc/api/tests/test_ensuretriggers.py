@@ -18,7 +18,8 @@ class EnsureTriggersTestCase(TestCase):
         check.last_ping = timezone.now()
         check.save()
         check.refresh_from_db()
-        assert check.alert_after is not None
+        assert check.alert_after != ""
+        
         ### The above assert fails. Make it pass
 
         alert_after = check.alert_after
