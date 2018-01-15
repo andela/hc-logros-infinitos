@@ -53,21 +53,18 @@ class CreateCheckTestCase(BaseTestCase):
         payload = json.dumps({"api_key": "abc",
                                 "name": "Foo"
                                 })
+        ### Make the post request and get the response
         r = self.client.post(self.URL, payload,
                              content_type="application/json",
                              HTTP_X_API_KEY="abc")
-
-        ### Make the post request and get the response
-        #r = {'status_code': 201} ### This is just a placeholder variable
-
         self.assertEqual(r.status_code, 201)
 
-    # def test_it_handles_missing_request_body(self):
-    #     ### Make the post request with a missing body and get the response
-    #     r = self.client.post(self.URL,
-    #                         content_type="application/json",
-    #                         HTTP_X_API_KEY="ythhui")
-    #     self.assertEqual(r.status_code, 400)
+    def test_it_handles_missing_request_body(self):
+        ### Make the post request with a missing body and get the response
+        r = self.client.post(self.URL,
+                            content_type="application/json",
+                            HTTP_X_API_KEY="ythhui")
+        self.assertEqual(r.status_code, 400)
 
     def test_it_handles_invalid_json(self):
         ### Make the post request with invalid json data type
@@ -91,13 +88,23 @@ class CreateCheckTestCase(BaseTestCase):
                   expected_error="name is not a string")
 
     # ### Test for the assignment of channels
-    # def test_assignment_of_channels(self):
-    
+    def test_assignment_of_channels(self):
+        r = self.post({
+            "api_key": "abc",
+            "name": "Foo",
+        })
+        check = Check.objects.get(user=self.alice, name="Foo")
+        check.assign_all_channels()
+        self.assertEqual(r.status_code,201)
+
+
     ### Test for the 'timeout is too small' and 'timeout is too large' errors
     def test_timeout_is_too_small(self):
-        self.post({"api_key": "abc","timeout": 0,},
+        r = self.post({"api_key": "abc","timeout": 0},
                   expected_error="timeout is too small")
+        self.assertEqual(r.status_code, 400)
 
     def test_timeout_is_too_large(self):
-        self.post({"api_key": "abc","timeout": 3600000000000,},
+        r = self.post({"api_key": "abc","timeout": 3600000000000,},
                   expected_error="timeout is too large")
+        self.assertEqual(r.status_code, 400)

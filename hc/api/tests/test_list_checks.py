@@ -4,6 +4,8 @@ from django.utils.timezone import now
 
 from hc.api.models import Check
 from hc.test import BaseTestCase
+from hc import settings
+from django.urls import reverse
 
 
 class ListChecksTestCase(BaseTestCase):
@@ -43,6 +45,22 @@ class ListChecksTestCase(BaseTestCase):
         ### Assert the expected length of checks
         assert len(checks) == 2
         ### Assert the checks Alice 1 and Alice 2's timeout, grace, ping_url, status,
+        self.assertEqual(checks["Alice 1"]["timeout"], 3600)
+        self.assertEqual(checks["Alice 1"]["grace"], 900)
+        self.assertEqual(checks["Alice 1"]["ping_url"], self.a1.url())
+        self.assertEqual(checks["Alice 1"]["status"], "new")
+        self.assertEqual(checks["Alice 1"]["last_ping"], self.now.isoformat())
+        self.assertEqual(checks["Alice 1"]["n_pings"], 1)
+        self.assertEqual(checks["Alice 1"]["pause_url"], settings.SITE_ROOT + reverse("hc-api-pause", args=[self.a1.code]))
+
+        self.assertEqual(checks["Alice 2"]["timeout"], 86400)
+        self.assertEqual(checks["Alice 2"]["grace"], 3600)
+        self.assertEqual(checks["Alice 2"]["ping_url"], self.a2.url())
+        self.assertEqual(checks["Alice 2"]["status"], "up")
+        self.assertEqual(checks["Alice 2"]["last_ping"], self.now.isoformat())
+        self.assertEqual(checks["Alice 2"]["n_pings"], 0)
+        self.assertEqual(checks["Alice 2"]["pause_url"], settings.SITE_ROOT + reverse("hc-api-pause", args=[self.a2.code]))
+        
         ### last_ping, n_pings and pause_url
 
     def test_it_shows_only_users_checks(self):
@@ -56,3 +74,7 @@ class ListChecksTestCase(BaseTestCase):
             self.assertNotEqual(check["name"], "Bob 1")
 
     ### Test that it accepts an api_key in the request
+    def test_check_accepts_api_key_in_the_request(self):
+        result = self.client.get("/api/v1/checks/", HTTP_X_API_KEY="abc")
+        self.assertEqual(result.status_code, 200)
+
