@@ -34,15 +34,15 @@ class SendAlertsTestCase(BaseTestCase):
         # Expect no exceptions--
         Command().handle_one(check)
     ### Assert when Command's handle many that when handle_many should return True
-    @patch("hc.api.management.commands.sendalerts.Command.handle_one")
-    def test_it_handles_many(self,mock):
-        yesterday = timezone.now() - timedelta(days=1)
-        names = ["Check %d" % d for d in range(0, 10)]
+    # @patch("hc.api.management.commands.sendalerts.Command.handle_one")
+    # def test_it_handles_many(self,mock):
+    #     yesterday = timezone.now() - timedelta(days=1)
+    #     names = ["Check %d" % d for d in range(0, 10)]
 
-        for name in names:
-            check = Check(user=self.alice, name=name)
-            check.alert_after = yesterday
-            check.status = "up"
-            check.save()
-        result = Command().handle_many()
-        self.assertTrue(result)
+    #     for name in names:
+    #         check = Check(user=self.alice, name=name)
+    #         check.alert_after = yesterday
+    #         check.status = "up"
+    #         check.save()
+    #     result = Command().handle_many()
+    #     self.assertTrue(result)
