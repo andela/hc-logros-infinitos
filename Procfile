@@ -1,3 +1,3 @@
 release: python manage.py migrate
-worker: python manage.py sendalerts
+release: python manage.py sendalerts
 web: gunicorn hc.wsgi
