@@ -10,3 +10,4 @@ static/.DS_Store
 .idea/
 hc-venv
  hc/api/migrations/0027_auto_20180117_1744.py
+venv/

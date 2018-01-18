@@ -239,4 +239,3 @@ class SMS(HttpTransport):
             
         except AfricasTalkingGatewayException as e:
             print('Encountered an error while sending: %s' % str(e))
-            return results
