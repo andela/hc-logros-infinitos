@@ -305,14 +305,13 @@ def do_add_channel(request, data):
 
         return redirect("hc-channels")
     else:
+        print(form.errors)
         return HttpResponseBadRequest()
-
 
 @login_required
 def add_channel(request):
     assert request.method == "POST"
     return do_add_channel(request, request.POST)
-
 
 @login_required
 @uuid_or_400
@@ -433,6 +432,10 @@ def add_hipchat(request):
     ctx = {"page": "channels"}
     return render(request, "integrations/add_hipchat.html", ctx)
 
+@login_required
+def add_sms(request):
+    ctx = {"page": "channels"}
+    return render(request, "integrations/add_sms.html", ctx)
 
 @login_required
 def add_pushbullet(request):

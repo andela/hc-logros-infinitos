@@ -6,3 +6,7 @@ static-collected
 .DS_Store
 static/.DS_Store
 .vscode/
+.env
+.idea/
+hc-venv
+ hc/api/migrations/0027_auto_20180117_1744.py
