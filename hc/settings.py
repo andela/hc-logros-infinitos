@@ -145,10 +145,10 @@ COMPRESS_OFFLINE = True
 EMAIL_BACKEND = "djmail.backends.default.EmailBackend"
 DJMAIL_REAL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 # Email
-EMAIL_HOST ='smtp.sparkpostmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'SMTP_Injection'
-EMAIL_HOST_PASSWORD = '3be1f9820f0a0b33235df6e3a83fc1920f42cf01'
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
 # Slack integration -- override these in local_settings
