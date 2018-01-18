@@ -152,8 +152,8 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
 # Slack integration -- override these in local_settings
-SLACK_CLIENT_ID = None
-SLACK_CLIENT_SECRET = None
+SLACK_CLIENT_ID = "300370717905.301980969415"
+SLACK_CLIENT_SECRET = "b52538015be1993899301ce5cc50cbc6"
 
 # Pushover integration -- override these in local_settings
 PUSHOVER_API_TOKEN = None
