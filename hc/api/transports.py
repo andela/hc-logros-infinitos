@@ -2,10 +2,12 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import timezone
 import json
+import os
 import requests
 from six.moves.urllib.parse import quote
 
 from hc.lib import emails
+from africastalking.AfricasTalkingGateway import AfricasTalkingGateway, AfricasTalkingGatewayException
 
 
 def tmpl(template_name, **ctx):
@@ -216,3 +218,24 @@ class VictorOps(HttpTransport):
         }
 
         return self.post(self.channel.value, payload)
+
+
+class SMS(HttpTransport):
+    def notify(self, check):
+        username   = os.getenv("USERNAME")
+        apikey   = os.getenv("API_KEY")
+        to = self.channel.value
+        message = """
+       Healthchecks Notification!\n
+       Name:  %s \n
+       Status: %s \n
+       Last ping: %s\n
+       Total Pings: %s      
+       """ % (check.name, check.status, check.last_ping.strftime('%x, %X'), check.n_pings)
+        # Create a new instance of our awesome gateway class
+        gateway = AfricasTalkingGateway(username, apikey)
+        try:         
+            results = gateway.sendMessage(to, message)
+            
+        except AfricasTalkingGatewayException as e:
+            print('Encountered an error while sending: %s' % str(e))

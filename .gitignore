@@ -6,3 +6,7 @@ static-collected
 .DS_Store
 static/.DS_Store
 .vscode/
+.env
+.idea/
+hc-venv
+venv/
