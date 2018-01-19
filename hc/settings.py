@@ -128,7 +128,6 @@ USE_TZ = True
 
 SITE_ROOT = "https://hc-logros.herokuapp.com"
 SITE_NAME = "Health Checks"
-DEFAULT_FROM_EMAIL = "hc-logros-infinitos@affiance.ug"
 
 PING_ENDPOINT = SITE_ROOT + "/ping/"
 PING_EMAIL_DOMAIN = HOST
@@ -152,8 +151,8 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
 # Slack integration -- override these in local_settings
-SLACK_CLIENT_ID = None
-SLACK_CLIENT_SECRET = None
+SLACK_CLIENT_ID = "300370717905.301980969415"
+SLACK_CLIENT_SECRET = "b52538015be1993899301ce5cc50cbc6"
 
 # Pushover integration -- override these in local_settings
 PUSHOVER_API_TOKEN = None
