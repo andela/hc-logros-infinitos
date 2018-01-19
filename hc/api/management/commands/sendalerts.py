@@ -24,7 +24,7 @@ class Command(BaseCommand):
         #job runs often
         going_often = query.filter(alert_after__lt=now, status="often")
         # Don't combine this in one query so Postgres can query using index:
-        checks = list(going_down.iterator()) + list(going_up.iterator())
+        checks = list(going_down.iterator()) + list(going_up.iterator()) 
         if not checks:
             return False
 
