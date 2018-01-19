@@ -1,5 +1,5 @@
 from django.test import Client, TestCase
-
+from hc.test import BaseTestCase
 from hc.api.models import Check, Ping
 
 
@@ -18,6 +18,15 @@ class PingTestCase(TestCase):
 
         ping = Ping.objects.latest("id")
         assert ping.scheme == "http"
+
+    # By shakirah and hadijah test for the often status when ping for the second time
+    def test_status_is_often(self):
+        """Tests that status is often when pinged"""
+        r = self.client.get("/ping/%s/" % self.check.code)
+        self.assertEqual(self.check.often, False)
+        r = self.client.get("/ping/%s/" % self.check.code)
+        self.check.refresh_from_db()
+        self.assertEqual(self.check.often, True)
 
     def test_it_handles_bad_uuid(self):
         r = self.client.get("/ping/not-uuid/")
