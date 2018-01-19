@@ -21,10 +21,11 @@ class Command(BaseCommand):
         now = timezone.now()
         going_down = query.filter(alert_after__lt=now, status="up")
         going_up = query.filter(alert_after__gt=now, status="down")
+        going_nag = query.filter(nag_after__lt=now, status="down", nag_mode=True)
         #job runs often
         going_often = query.filter(alert_after__lt=now, status="often")
         # Don't combine this in one query so Postgres can query using index:
-        checks = list(going_down.iterator()) + list(going_up.iterator())
+        checks = list(going_down.iterator()) + list(going_up.iterator()) + list(going_nag.iterator())
         if not checks:
             return False
 
@@ -46,6 +47,11 @@ class Command(BaseCommand):
         # it won't process this check again.
         check.status = check.get_status()
         check.save()
+
+        if check.status == "down":
+            if check.nag_mode == True:
+                check.nag_after = (timezone.now() + check.nag_interval)
+                check.save()
 
         tmpl = "\nSending alert, status=%s, code=%s\n"
         self.stdout.write(tmpl % (check.status, check.code))
