@@ -1,6 +1,1 @@
-release: rm -rf hc/api/migrations
-release: python manage.py makemigrations api
-release: python manage.py migrate
-release: python manage.py ensuretriggers
-release: python manage.py sendalerts
-web: gunicorn hc.wsgi
+web: python manage.py makemigrations & python manage.py migrate & gunicorn hc.wsgi --log-file -
