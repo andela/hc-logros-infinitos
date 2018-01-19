@@ -22,6 +22,24 @@ def ping(request, code):
         return HttpResponseBadRequest()
 
     check.n_pings = F("n_pings") + 1
+
+    if check.last_ping:
+        # To cater for the edge cases where timeout and grace time are equal
+        if (check.timeout == check.grace) and \
+                        (timezone.now() - check.last_ping) < check.timeout:
+            check.often = True
+            check.send_often_alert()
+            
+            
+            
+        elif check.last_ping < timezone.now() and \
+                        (check.last_ping + check.timeout - check.grace) > timezone.now():
+            check.often = True
+            check.send_often_alert()
+            
+        else:
+            check.often = False
+    
     check.last_ping = timezone.now()
     if check.status in ("new", "paused"):
         check.status = "up"
@@ -58,10 +76,18 @@ def checks(request):
         check = Check(user=request.user)
         check.name = str(request.json.get("name", ""))
         check.tags = str(request.json.get("tags", ""))
+        if "nag_mode" in request.json:
+            str_text = request.json["nag_mode"]
+            if str_text == "True": 
+                check.nag_mode = True
+            else: 
+                check.nag_mode = False
         if "timeout" in request.json:
             check.timeout = td(seconds=request.json["timeout"])
         if "grace" in request.json:
             check.grace = td(seconds=request.json["grace"])
+        if "nag_interval" in request.json:
+            check.nag_interval = td(seconds=request.json["nag_interval"])
 
         check.save()
 
@@ -106,6 +132,9 @@ def badge(request, username, signature, tag):
 
         if status == "up" and check.in_grace_period():
             status = "late"
+
+        if check.get_status == 'up':
+            status = "often"
 
         if check.get_status() == "down":
             status = "down"
