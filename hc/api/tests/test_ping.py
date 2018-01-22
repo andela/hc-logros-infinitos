@@ -23,10 +23,11 @@ class PingTestCase(TestCase):
     def test_status_is_often(self):
         """Tests that status is often when pinged"""
         r = self.client.get("/ping/%s/" % self.check.code)
-        self.assertEqual(self.check.often, False)
+        self.check.refresh_from_db()
+        assert self.check.status == "up"
         r = self.client.get("/ping/%s/" % self.check.code)
         self.check.refresh_from_db()
-        self.assertEqual(self.check.often, True)
+        assert self.check.status == "often"
 
     def test_it_handles_bad_uuid(self):
         r = self.client.get("/ping/not-uuid/")
