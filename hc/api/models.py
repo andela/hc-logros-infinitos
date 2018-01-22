@@ -20,7 +20,6 @@ STATUSES = (
 )
 DEFAULT_TIMEOUT = td(days=1)
 DEFAULT_GRACE = td(hours=1)
-# DEFAULT_NAG = td(hours=25)
 
 CHANNEL_KINDS = (("email", "Email"), ("webhook", "Webhook"),
                  ("hipchat", "HipChat"),
@@ -49,12 +48,11 @@ class Check(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     timeout = models.DurationField(default=DEFAULT_TIMEOUT)
     grace = models.DurationField(default=DEFAULT_GRACE)
-    # nag_interval = models.DurationField(default=DEFAULT_NAG)
     n_pings = models.IntegerField(default=0)
     last_ping = models.DateTimeField(null=True, blank=True)
     alert_after = models.DateTimeField(null=True, blank=True, editable=False)
     status = models.CharField(max_length=6, choices=STATUSES, default="new")
-    often = models.BooleanField(default=False)
+    ping_diff = models.DurationField(null=True, blank=True)
 
     def name_then_code(self):
         if self.name:
@@ -71,10 +69,6 @@ class Check(models.Model):
     def email(self):
         return "%s@%s" % (self.code, settings.PING_EMAIL_DOMAIN)
 
-    def send_often_alert(self):
-        self.status = "often"
-        self.send_alert()
-
     def send_alert(self):
         if self.status not in ("up", "down", "often"):
             raise NotImplementedError("Unexpected status: %s" % self.status)
@@ -90,15 +84,16 @@ class Check(models.Model):
     def get_status(self):
         if self.status in ("new", "paused"):
             return self.status
-
         now = timezone.now()
-        if self.often and ((now - self.last_ping) < (self.timeout + self.grace)):
-            return "often"
-
+        if(self.ping_diff):
+            if self.ping_diff < (self.timeout - self.grace):
+                return "often"
+         
         if self.last_ping + self.timeout + self.grace > now:
             return "up"
 
-        return "down"
+        return "down"  
+
 
     def in_grace_period(self):
         if self.status in ("new", "paused"):
@@ -107,7 +102,7 @@ class Check(models.Model):
         up_ends = self.last_ping + self.timeout
         grace_ends = up_ends + self.grace
         return up_ends < timezone.now() < grace_ends
-
+    
     def assign_all_channels(self):
         if self.user:
             channels = Channel.objects.filter(user=self.user)
