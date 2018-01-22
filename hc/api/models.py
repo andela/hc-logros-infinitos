@@ -1,5 +1,3 @@
-# coding: utf-8
-
 import hashlib
 import json
 import uuid
@@ -17,7 +15,8 @@ STATUSES = (
     ("up", "Up"),
     ("down", "Down"),
     ("new", "New"),
-    ("paused", "Paused")
+    ("paused", "Paused"),
+    ("often", "Often")
 )
 DEFAULT_TIMEOUT = td(days=1)
 DEFAULT_GRACE = td(hours=1)
@@ -49,13 +48,14 @@ class Check(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     timeout = models.DurationField(default=DEFAULT_TIMEOUT)
     grace = models.DurationField(default=DEFAULT_GRACE)
-    nag_interval = models.DurationField(default=DEFAULT_NAG)
     nag_after = models.DateTimeField(null=True, blank=True)
+    nag_interval = models.DurationField(default=DEFAULT_NAG)
     nag_mode = models.BooleanField(default=False)
     n_pings = models.IntegerField(default=0)
     last_ping = models.DateTimeField(null=True, blank=True)
     alert_after = models.DateTimeField(null=True, blank=True, editable=False)
     status = models.CharField(max_length=6, choices=STATUSES, default="new")
+    often = models.BooleanField(default=False)
 
     def name_then_code(self):
         if self.name:
@@ -72,8 +72,12 @@ class Check(models.Model):
     def email(self):
         return "%s@%s" % (self.code, settings.PING_EMAIL_DOMAIN)
 
+    def send_often_alert(self):
+        self.status = "often"
+        self.send_alert()
+
     def send_alert(self):
-        if self.status not in ("up", "down"):
+        if self.status not in ("up", "down", "often"):
             raise NotImplementedError("Unexpected status: %s" % self.status)
 
         errors = []
@@ -89,6 +93,8 @@ class Check(models.Model):
             return self.status
 
         now = timezone.now()
+        if self.often and ((now - self.last_ping) < (self.timeout + self.grace)):
+            return "often"
 
         if self.last_ping + self.timeout + self.grace > now:
             return "up"
