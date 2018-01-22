@@ -81,8 +81,10 @@
                 {% elif ch.kind == "pushbullet" %}
                     <span class="preposition">API key</span>
                     {{ ch.value }}
-                {% else %}
+                {% elif ch.kind == "sms" %}
                     {{ ch.value }}
+                {% else %}
+                        {{ ch.value }}
                 {% endif %}
             </td>
             <td class="channels-num-checks">

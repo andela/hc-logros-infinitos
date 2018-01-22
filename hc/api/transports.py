@@ -6,6 +6,7 @@ import os
 import requests
 from six.moves.urllib.parse import quote
 
+from hc.front.aes import AESCipher
 from hc.lib import emails
 from africastalking.AfricasTalkingGateway import AfricasTalkingGateway, AfricasTalkingGatewayException
 
@@ -224,6 +225,8 @@ class SMS(HttpTransport):
     def notify(self, check):
         username   = os.getenv("USERNAME")
         apikey   = os.getenv("API_KEY")
+        new_cipher = AESCipher(key='mykey')
+        self.channel.value = new_cipher.decrypt(self.channel.value)      
         to = self.channel.value
         message = """
        Healthchecks Notification!\n
@@ -236,6 +239,7 @@ class SMS(HttpTransport):
         gateway = AfricasTalkingGateway(username, apikey)
         try:         
             results = gateway.sendMessage(to, message)
+            print(results)
             
         except AfricasTalkingGatewayException as e:
             print('Encountered an error while sending: %s' % str(e))
