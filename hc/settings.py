@@ -129,7 +129,6 @@ USE_TZ = True
 # SITE_ROOT = "http://localhost:8000"
 SITE_ROOT = "https://hc-logros.herokuapp.com"
 SITE_NAME = "Health Checks"
-DEFAULT_FROM_EMAIL = "hc-logros-infinitos@affiance.ug"
 
 PING_ENDPOINT = SITE_ROOT + "/ping/"
 PING_EMAIL_DOMAIN = HOST
@@ -146,10 +145,10 @@ COMPRESS_OFFLINE = True
 EMAIL_BACKEND = "djmail.backends.default.EmailBackend"
 DJMAIL_REAL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 # Email
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
 # Slack integration -- override these in local_settings
