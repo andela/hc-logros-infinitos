@@ -19,15 +19,13 @@
             {% if check.get_status == "new" %}
                 <span class="status icon-up new"
                     data-toggle="tooltip" title="New. Has never received a ping."></span>
-            {% elif check.get_status == "up" %}
-                <span class="status icon-up"></span>
             {% elif check.get_status == "paused" %}
                 <span class="status icon-paused"
                     data-toggle="tooltip" title="Monitoring paused. Ping to resume."></span>
             {% elif check.in_grace_period %}
                 <span class="status icon-grace"></span>
-            {% elif check.in_reverse_grace %}
-                <span class="status icon-grace early"></span>
+            {% elif check.get_status == "up" %}
+                <span class="status icon-up"></span>
             {% elif check.get_status == "often" %}
                 <span class="glyphicon glyphicon-fast-forward">fast</span>
             {% elif check.get_status == "down" %}
