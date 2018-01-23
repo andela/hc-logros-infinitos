@@ -50,7 +50,17 @@ class AddChannelTestCase(BaseTestCase):
         q = Channel.objects.filter(user= alice, value="bob@example.org")
         self.assertEqual(q.count(), 1)        
         self.assertEqual(r.status_code, 302)
-
+  
+    def test_sms_works(self):
+        """ test sms access"""
+        alice_channel = User.objects.get(email="alice@example.org")
+        alice_before = Channel.objects.filter(user=alice_channel).count()
+        self.client.login(username="bob@example.org", password="password")
+        url = "/integrations/add/"
+        form = {"kind": "sms"}
+        self.client.post(url, form)
+        alice_after = Channel.objects.filter(user=alice_channel).count()
+        self.assertEqual(alice_after, (alice_before + 1))
 
     ### Test that bad kinds don't work
     def test_bad_kinds_dont_work(self):
