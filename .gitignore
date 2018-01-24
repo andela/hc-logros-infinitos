@@ -6,3 +6,6 @@ static-collected
 .DS_Store
 static/.DS_Store
 .vscode/
+hc-venv/
+.env
+hc/local_settings.py

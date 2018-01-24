@@ -20,32 +20,21 @@ def ping(request, code):
         check = Check.objects.get(code=code)
     except Check.DoesNotExist:
         return HttpResponseBadRequest()
-
     check.n_pings = F("n_pings") + 1
-
-    if check.last_ping:
-        # To cater for the edge cases where timeout and grace time are equal
-        if (check.timeout == check.grace) and \
-                        (timezone.now() - check.last_ping) < check.timeout:
-            check.often = True
-            check.send_often_alert()
-            
-            
-            
-        elif check.last_ping < timezone.now() and \
-                        (check.last_ping + check.timeout - check.grace) > timezone.now():
-            check.often = True
-            check.send_often_alert()
-            
-        else:
-            check.often = False
-    
+    if check.last_ping is not None:
+        check.ping_diff = timezone.now() - check.last_ping
     check.last_ping = timezone.now()
+        
     if check.status in ("new", "paused"):
         check.status = "up"
-
+    if(check.ping_diff):
+        if check.status=="up" and check.ping_diff < (check.timeout - check.grace):
+            check.status = "often"
     check.save()
     check.refresh_from_db()
+    # send alert for fast
+    if check.status == "often":
+        check.send_alert()
 
     ping = Ping(owner=check)
     headers = request.META
@@ -133,12 +122,10 @@ def badge(request, username, signature, tag):
         if status == "up" and check.in_grace_period():
             status = "late"
 
-        if check.get_status == 'up':
-            status = "often"
-
         if check.get_status() == "down":
             status = "down"
             break
+
 
     svg = get_badge_svg(tag, status)
     return HttpResponse(svg, content_type="image/svg+xml")
