@@ -1,5 +1,2 @@
-release: python manage.py makemigrations
-release: python manage.py migrate
-release: python manage.py ensuretriggers
-release: python manage.py sendalerts
-web: gunicorn hc.wsgi --log-file -
+
+web: python manage.py makemigrations & python manage.py migrate & python manage.py sendalerts & gunicorn hc.wsgi --log-file -
