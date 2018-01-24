@@ -5,6 +5,21 @@
 
 
 {% block content %}
+
+<script>
+    function toggleTrue()
+    {
+        if (document.getElementById('nag_checker').checked) 
+        {
+            document.getElementById('nagcheck-value').innerHTML = "True";
+            document.getElementById('update-timeout-nag_mode').value = "True";
+        } else {
+            document.getElementById('nagcheck-value').innerHTML = "False";
+            document.getElementById('update-timeout-nag_mode').value = "False";
+        }
+    }
+</script>
+
 <div class="row">
     <div class="col-sm-12">
         <h1>
@@ -117,6 +132,7 @@
             <input type="hidden" name="timeout" id="update-timeout-timeout" />
             <input type="hidden" name="grace" id="update-timeout-grace" />
             <input type="hidden" name="nag_interval" id="update-timeout-nag_interval" />
+            <input type="hidden" name="nag_mode" id="update-timeout-nag_mode" />
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="update-timeout-info text-center">
@@ -151,17 +167,24 @@
                     <div id="grace-slider"></div>
 
                     <div class="update-timeout-info text-center" style="margin-bottom:15px;">
-                            <span
-                                class="update-timeout-label"
-                                data-toggle="tooltip"
-                                title="Tag Nag Mode on.">
-                                Nag Mode
-                            </span>
-                            <select name="nag_mode" id="nag_check">
-                                <option value="True">True</option>
-                                <option selected="selected" value="False">False</option>
-                            </select>
-                        </div>    
+                        <span
+                            class="update-timeout-label"
+                            data-toggle="tooltip"
+                            title="Tag Nag Mode on.">
+                            Nag Mode
+                        </span>
+                        <span
+                            id="nagcheck-value"
+                            class="update-timeout-value">
+                            False
+                        </span>
+                        <br>
+                        <br>
+                        <label class="switch">
+                            <input type="checkbox" id="nag_checker" onclick="toggleTrue()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>    
 
                     <div class="update-timeout-info text-center">
                         <span
