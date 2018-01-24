@@ -123,6 +123,7 @@ tr:hover .copy-link {
     display: inline-block;
     width: 60px;
     height: 34px;
+    border-radius: 2px;
   }
 
   
