@@ -21,11 +21,12 @@ class Command(BaseCommand):
         now = timezone.now()
         going_down = query.filter(alert_after__lt=now, status="up")
         going_up = query.filter(alert_after__gt=now, status="down")
-        going_nag = query.filter(nag_after__lt=now, status="down", nag_mode=True)
+        # checks that are in nag_mode and the status is down, this will get all checks to be nagged
+        checks_to_nag = query.filter(nag_after__lt=now, status="down", nag_mode=True)
         #job runs often
         # going_often = query.filter(alert_after__lt=now, status="often")
         # Don't combine this in one query so Postgres can query using index:
-        checks = list(going_down.iterator()) + list(going_up.iterator()) + list(going_nag.iterator())
+        checks = list(going_down.iterator()) + list(going_up.iterator()) + list(checks_to_nag.iterator())
         if not checks:
             return False
 
@@ -49,7 +50,13 @@ class Command(BaseCommand):
         check.save()
 
         if check.status == "down":
+            # this will check the status has gone down
             if check.nag_mode == True:
+                ''' 
+                This will ensure that after a check has gone down then
+                the nag_mode is set to True. This is done at the same time
+                as when the first alert has been sent.
+                '''
                 check.nag_after = (timezone.now() + check.nag_interval)
                 check.save()
 

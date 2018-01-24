@@ -31,9 +31,6 @@
             {% elif check.get_status == "down" %}
                 <span class="status icon-down"></span>
             {% endif %}
-            {% if check.nag_mode == True %}
-                <span class="glyphicon glyphicon-exclamation-sign" style="color:rgb(235, 82, 82)"></span>
-            {% endif %}
         </td>
         <td class="name-cell">
             <div data-name="{{ check.name }}"

@@ -45,6 +45,11 @@
 #nag-slider.noUi-connect {
   background: #f0ad4e;
 } 
+#nag_check{
+    width: 470px;
+    background-color: #fafafa;
+    border-radius: 3px;
+}
 
 #period-slider .noUi-value, #grace-slider .noUi-value, #nag-slider .noUi-value {
     width: 60px;
