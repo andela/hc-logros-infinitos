@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', models.UUIDField(default=uuid.uuid4, editable=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
-                ('kind', models.CharField(choices=[('email', 'Email'), ('webhook', 'Webhook'), ('hipchat', 'HipChat'), ('slack', 'Slack'), ('pd', 'PagerDuty'), ('po', 'Pushover'), ('victorops', 'VictorOps')], max_length=20)),
+                ('kind', models.CharField(choices=[('email', 'Email'), ('webhook', 'Webhook'), ('hipchat', 'HipChat'), ('slack', 'Slack'), ('pd', 'PagerDuty'), ('po', 'Pushover'), ('victorops', 'VictorOps'), ('sms', 'SMS')], max_length=20)),
                 ('value', models.TextField(blank=True)),
                 ('email_verified', models.BooleanField(default=False)),
             ],

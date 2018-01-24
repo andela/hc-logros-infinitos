@@ -1,6 +1,7 @@
 from collections import Counter
 from datetime import timedelta as td
 from itertools import tee
+from .aes import AESCipher
 
 import requests
 from django.conf import settings
@@ -277,10 +278,14 @@ def channels(request):
 
         channel.checks = new_checks
         return redirect("hc-channels")
-
     channels = Channel.objects.filter(user=request.team.user).order_by("created")
     channels = channels.annotate(n_checks=Count("checks"))
+    for channel in channels:
+        if channel.kind == "sms":
+            new_cipher = AESCipher(key='mykey')
+            channel.value = new_cipher.decrypt(channel.value)
 
+    
     num_checks = Check.objects.filter(user=request.team.user).count()
 
     ctx = {
@@ -297,6 +302,10 @@ def do_add_channel(request, data):
     form = AddChannelForm(data)
     if form.is_valid():
         channel = form.save(commit=False)
+        if channel.kind == "sms":
+            cipher = AESCipher(key='mykey')
+            channel.value = cipher.encrypt(channel.value)
+
         channel.user = request.team.user
         channel.save()
 
@@ -307,14 +316,13 @@ def do_add_channel(request, data):
 
         return redirect("hc-channels")
     else:
+        print(form.errors)
         return HttpResponseBadRequest()
-
 
 @login_required
 def add_channel(request):
     assert request.method == "POST"
     return do_add_channel(request, request.POST)
-
 
 @login_required
 @uuid_or_400
@@ -435,6 +443,10 @@ def add_hipchat(request):
     ctx = {"page": "channels"}
     return render(request, "integrations/add_hipchat.html", ctx)
 
+@login_required
+def add_sms(request):
+    ctx = {"page": "channels"}
+    return render(request, "integrations/add_sms.html", ctx)
 
 @login_required
 def add_pushbullet(request):
