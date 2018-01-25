@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load compress staticfiles %}
+
+{% block title %}Team Checks - healthchecks.io{% endblock %}
+
+
+{% block content %}
+<div class="row">
+        <div class="col-sm-12">
+            
+                    {% for check in checks %}
+                    <table style="width:100%" class="table hidden-xs">
+                        <tr>
+                            <th class="th-name">CheckName
+                                <tr>
+                                    <td>
+                            {{loop.index}}{{check}}
+                        </td>
+                        </tr>
+                        </th>
+                        </tr>
+                    </table>
+                    {% endfor %}
+           
+        </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% compress js %}
+<script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/nouislider.min.js' %}"></script>
+<script src="{% static 'js/clipboard.min.js' %}"></script>
+<script src="{% static 'js/checks.js' %}"></script>
+{% endcompress %}
+{% endblock %}
