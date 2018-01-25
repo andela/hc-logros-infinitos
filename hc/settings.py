@@ -111,9 +111,11 @@ if os.environ.get("DB") == "mysql":
         }
     }
 
-if os.environ.get("HEROKU") == 'TRUE':
-    db_from_env = dj_database_url.config()
-    DATABASES['default'].update(db_from_env)
+# if os.environ.get("HEROKU") == 'TRUE':
+#     db_from_env = dj_database_url.config()
+#     DATABASES['default'].update(db_from_env)
+
+DATABASES[‘default’] = dj_database_url.config()
 
 
 LANGUAGE_CODE = 'en-us'
@@ -168,3 +170,5 @@ if os.path.exists(os.path.join(BASE_DIR, "hc/local_settings.py")):
     from .local_settings import *
 else:
     warnings.warn("local_settings.py not found, using defaults")
+
+SECURE_PROXY_SSL_HEADER = (‘HTTP_X_FORWARDED_PROTO’, ‘https’)
