@@ -171,4 +171,4 @@ if os.path.exists(os.path.join(BASE_DIR, "hc/local_settings.py")):
 else:
     warnings.warn("local_settings.py not found, using defaults")
 
-SECURE_PROXY_SSL_HEADER = (‘HTTP_X_FORWARDED_PROTO’, ‘https’)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
