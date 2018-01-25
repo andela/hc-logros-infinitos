@@ -111,11 +111,9 @@ if os.environ.get("DB") == "mysql":
         }
     }
 
-# if os.environ.get("HEROKU") == 'TRUE':
-#     db_from_env = dj_database_url.config()
-#     DATABASES['default'].update(db_from_env)
+if os.environ.get("TRIGGER") == 'TRUE':
+    DATABASES['default'] = dj_database_url.config()
 
-# DATABASES['default'] = dj_database_url.config()
 
 
 LANGUAGE_CODE = 'en-us'
