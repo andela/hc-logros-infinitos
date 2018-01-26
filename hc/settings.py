@@ -126,7 +126,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-SITE_ROOT = "https://hc-invite-memeber.herokuapp.com"
+SITE_ROOT = "https://hc-invite-member.herokuapp.com"
 # SITE_ROOT = "http://localhost:8000"
 SITE_NAME = "Health Checks"
 
