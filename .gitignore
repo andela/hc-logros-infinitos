@@ -10,3 +10,4 @@ static/.DS_Store
 .env
 .idea/
 hc-venv
+migrations/
