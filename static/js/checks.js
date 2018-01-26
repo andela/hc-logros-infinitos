@@ -1,10 +1,15 @@
 $(function () {
+    window.onload=function(){
+        document.getElementById('nagcheck-value').innerHTML = "False";
+        document.getElementById('update-timeout-nag_mode').value = "False";
+    }
 
     var MINUTE = {name: "minute", nsecs: 60};
     var HOUR = {name: "hour", nsecs: MINUTE.nsecs * 60};
     var DAY = {name: "day", nsecs: HOUR.nsecs * 24};
     var WEEK = {name: "week", nsecs: DAY.nsecs * 7};
-    var UNITS = [WEEK, DAY, HOUR, MINUTE];
+    var MONTH = {name: "month", nsecs: DAY.nsecs * 30};
+    var UNITS = [MONTH, WEEK, DAY, HOUR, MINUTE];
 
     var secsToText = function(total) {
         var remainingSeconds = Math.floor(total);
@@ -37,13 +42,14 @@ $(function () {
         range: {
             'min': [60, 60],
             '33%': [3600, 3600],
-            '66%': [86400, 86400],
-            '83%': [604800, 604800],
-            'max': 2592000,
+            '50%': [86400, 86400],
+            '66%': [604800, 604800],
+            '83%': [2592000, 2592000],
+            'max': 7776000,
         },
         pips: {
             mode: 'values',
-            values: [60, 1800, 3600, 43200, 86400, 604800, 2592000],
+            values: [60, 1800, 3600, 86400, 604800, 2592000, 7776000],
             density: 4,
             format: {
                 to: secsToText,
@@ -66,13 +72,14 @@ $(function () {
         range: {
             'min': [60, 60],
             '33%': [3600, 3600],
-            '66%': [86400, 86400],
-            '83%': [604800, 604800],
-            'max': 2592000,
+            '50%': [86400, 86400],
+            '66%': [604800, 604800],
+            '83%': [2592000, 2592000],
+            'max': 7776000,
         },
         pips: {
             mode: 'values',
-            values: [60, 1800, 3600, 43200, 86400, 604800, 2592000],
+            values: [60, 1800, 3600, 86400, 604800, 2592000, 7776000],
             density: 4,
             format: {
                 to: secsToText,
@@ -114,7 +121,6 @@ $(function () {
         $("#nag-slider-value").text(secsToText(rounded));
         $("#update-timeout-nag_interval").val(rounded);
     });
-
 
     $('[data-toggle="tooltip"]').tooltip();
 
@@ -225,6 +231,17 @@ $(function () {
     clipboard.on('error', function(e) {
         var text = e.trigger.getAttribute("data-clipboard-text");
         prompt("Press Ctrl+C to select:", text)
+    });
+
+    $(function toggleTrue(){
+        if ($('#nag_checker').checked) 
+        {
+            $('#nagcheck-value').html("True");
+            $('#update-timeout-nag_mode').value("True");
+        } else {
+            $('#nagcheck-value').html("False");
+            $('#update-timeout-nag_mode').value("False");
+        }
     });
 
 
