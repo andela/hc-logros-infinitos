@@ -30,14 +30,37 @@ class ProfileTestCase(BaseTestCase):
         self.assertIn(
             "Here's a link to set a password for your account on healthchecks.io", mail.outbox[0].body)
 
-    def test_it_sends_report(self):
+    def test_it_sends_daily_report(self):
         ''' Should send report '''
         check = Check(name="Test Check", user=self.alice)
         check.save()
 
+        self.alice.profile.reports_allowed = "daily"
         self.alice.profile.send_report()
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Daily Report')
+        self.assertIn(
+            "This is a daily report sent by healthchecks.io", mail.outbox[0].body)
 
-        ###Assert that the email was sent and check email content
+    def test_it_sends_weekly_report(self):
+        ''' Should send report '''
+        check = Check(name="Test Check", user=self.alice)
+        check.save()
+
+        self.alice.profile.reports_allowed = "weekly"
+        self.alice.profile.send_report()
+        self.assertEqual(len(mail.outbox), 1)        
+        self.assertEqual(mail.outbox[0].subject, 'Weekly Report')
+        self.assertIn(
+            "This is a weekly report sent by healthchecks.io", mail.outbox[0].body)
+
+    def test_it_sends_monthly_report(self):
+        ''' Should send report '''
+        check = Check(name="Test Check", user=self.alice)
+        check.save()
+
+        self.alice.profile.reports_allowed = "monthly"
+        self.alice.profile.send_report()
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Monthly Report')
         self.assertIn(

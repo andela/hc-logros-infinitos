@@ -20,7 +20,7 @@ class Profile(models.Model):
     team_name = models.CharField(max_length=200, blank=True)
     team_access_allowed = models.BooleanField(default=False)
     next_report_date = models.DateTimeField(null=True, blank=True)
-    reports_allowed = models.BooleanField(default=True)
+    reports_allowed = models.CharField(max_length=200)
     ping_log_limit = models.IntegerField(default=100)
     token = models.CharField(max_length=128, blank=True)
     api_key = models.CharField(max_length=128, blank=True)
@@ -58,16 +58,24 @@ class Profile(models.Model):
     def send_report(self):
         # reset next report date first:
         now = timezone.now()
-        self.next_report_date = now + timedelta(days=30)
+        self.next_report_date = now
+        if self.reports_allowed == "instant":
+            self.next_report_date = now
+        if self.reports_allowed == "daily":
+            self.next_report_date = now + timedelta(days=1)
+        elif self.reports_allowed == "weekly":
+            self.next_report_date = now + timedelta(days=7)
+        elif self.reports_allowed == "monthly":
+            self.next_report_date = now + timedelta(days=30)            
         self.save()
 
         token = signing.Signer().sign(uuid.uuid4())
         path = reverse("hc-unsubscribe-reports", args=[self.user.username])
         unsub_link = "%s%s?token=%s" % (settings.SITE_ROOT, path, token)
-
         ctx = {
             "checks": self.user.check_set.order_by("created"),
             "now": now,
+            "reports_allowed": self.reports_allowed,
             "unsub_link": unsub_link
         }
 
