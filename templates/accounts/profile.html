@@ -24,13 +24,32 @@
             <div class="panel-body settings-block">
                 <form method="post">
                     {% csrf_token %}
-                    <h2>Monthly Reports</h2>
+                    <h2>Periodic Reports</h2>
                     <label>
                         <input
                             name="reports_allowed"
-                            type="checkbox"
-                            {% if profile.reports_allowed %} checked {% endif %}>
-                        Each month send me a summary of my checks
+                            type="radio"
+                            value="monthly"
+                            {% if profile.reports_allowed == "monthly" %} checked{% endif %}>
+                            Monthly
+                        <input
+                            name="reports_allowed"
+                            type="radio"
+                            value="weekly"
+                            {% if profile.reports_allowed == "weekly" %} checked {% endif %}>
+                            Weekly
+                        <input
+                            name="reports_allowed"
+                            type="radio"
+                            value="daily"
+                            {% if profile.reports_allowed == "daily" %} checked{% endif %}>
+                            daily
+                        <input
+                            name="reports_allowed"
+                            type="radio"
+                            value="now"
+                            {% if profile.reports_allowed == "instant" %} checked{% endif %}>
+                            instant
                     </label>
                     <button
                         name="update_reports_allowed"
