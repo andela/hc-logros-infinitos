@@ -58,9 +58,9 @@ class Profile(models.Model):
         now = timezone.now()
         self.next_report_date = now
         if self.reports_allowed == "instant":
-            self.next_report_date = now + timedelta(minutes=1)
+            self.next_report_date = now
         if self.reports_allowed == "daily":
-            self.next_report_date = now - timedelta(days=1)
+            self.next_report_date = now + timedelta(days=1)
         elif self.reports_allowed == "weekly":
             self.next_report_date = now + timedelta(days=7)
         elif self.reports_allowed == "monthly":
