@@ -74,8 +74,8 @@ class Profile(models.Model):
         emails.report(self.user.email, ctx)
 
     def invite(self, user):
-        # member = Member(team=self, user=user)
-        # member.save()
+        member = Member(team=self, user=user)
+        member.save()
         # Switch the invited user over to the new team so they
         # notice the new team on next visit:
         user.profile.current_team = self

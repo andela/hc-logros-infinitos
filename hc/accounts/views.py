@@ -182,6 +182,7 @@ def profile(request):
                 # member = profile.objects.get(user=user)
                 user_profile = Profile.objects.get(user=user)
                 member = Member()
+                
                 for key, value in dict(request.POST).items():
                     if value[0] == 'on':
                         # this means the check is selected, save the key
@@ -190,7 +191,7 @@ def profile(request):
                         member.team = user_profile
                         member.hcheck = key
                         member.save()
-
+            
         elif "remove_team_member" in request.POST:
             form = RemoveTeamMemberForm(request.POST)
             if form.is_valid():
