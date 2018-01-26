@@ -18,7 +18,7 @@ from hc.api.decorators import uuid_or_400
 from hc.api.models import DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
 from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,
                             TimeoutForm)
-
+from hc.accounts.models import Member 
 
 # from itertools recipes:
 def pairwise(iterable):
@@ -27,6 +27,44 @@ def pairwise(iterable):
     next(b, None)
     return zip(a, b)
 
+def team_checks(request):
+    
+    q = Member.objects.filter(user=request.user)
+    qs = list(q)
+
+    for row in qs:
+        # print(row.hcheck)
+        
+        ch = Check.objects.filter(name=row.hcheck).order_by('created')
+        checks = list(ch)
+      
+    counter = Counter()
+    down_tags, grace_tags = set(), set()
+    for check in checks:
+        print(check.to_dict())
+        status = check.get_status()
+        for tag in check.tags_list():
+            if tag == "":
+                continue
+
+            counter[tag] += 1
+
+            if status == "down":
+                down_tags.add(tag)
+            elif check.in_grace_period():
+                grace_tags.add(tag)
+
+    ctx = {
+        "page": "team_checks",
+        "checks": checks,
+        "now": timezone.now(),
+        "tags": counter.most_common(),
+        "down_tags": down_tags,
+        "grace_tags": grace_tags,
+        "ping_endpoint": settings.PING_ENDPOINT
+    }
+    
+    return render(request, "front/teamchecks.html", ctx)
 
 @login_required
 def my_checks(request):
