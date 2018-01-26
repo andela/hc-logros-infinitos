@@ -10,4 +10,6 @@ static/.DS_Store
 .env
 .idea/
 hc-venv
-migrations/
+hc/accounts/migrations/0001_initial.py
+hc/api/migrations/0001_initial.py
+hc/payments/migrations/0001_initial.py
