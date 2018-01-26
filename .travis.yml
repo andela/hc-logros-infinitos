@@ -7,7 +7,6 @@ install:
     - pip install braintree coveralls mock mysqlclient
 env:
   - DB=sqlite
-  - DB=mysql
   - DB=postgres
 addons:
   postgresql: "9.4"
@@ -16,6 +15,7 @@ before_script:
 script:
   - python manage.py makemigrations
   - python manage.py migrate  
+  - python manage.py migrate auth  
   - coverage run --omit=*/tests/* --source=hc manage.py test
 after_success: coveralls
 cache: pip
