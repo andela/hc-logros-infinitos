@@ -173,25 +173,23 @@ def profile(request):
                     user = User.objects.get(email=email)
                 except User.DoesNotExist:
                     user = _make_user(email)
-                # add the user
-                profile.invite(user)
-                messages.success(request, "Invitation to %s sent!" % email)
-
                 # get the checks selected and add them to invited
                 # user as checks they have permissions on
                 # member = profile.objects.get(user=user)
                 user_profile = Profile.objects.get(user=user)
-                member = Member()
-                
+
                 for key, value in dict(request.POST).items():
                     if value[0] == 'on':
                         # this means the check is selected, save the key
                         # in a table where team checks are saved
+                        member = Member()
                         member.user = user
                         member.team = user_profile
                         member.hcheck = key
                         member.save()
-            
+                # add the user
+                profile.invite(user)
+                messages.success(request, "Invitation to %s sent!" % email)
         elif "remove_team_member" in request.POST:
             form = RemoveTeamMemberForm(request.POST)
             if form.is_valid():
@@ -201,8 +199,7 @@ def profile(request):
                 farewell_user.profile.current_team = None
                 farewell_user.profile.save()
 
-                Member.objects.filter(team=profile,
-                                      user=farewell_user).delete()
+                Member.objects.filter(user=farewell_user).delete()
 
                 messages.info(request, "%s removed from team!" % email)
         elif "set_team_name" in request.POST:
