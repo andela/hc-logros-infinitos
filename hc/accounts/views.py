@@ -173,6 +173,8 @@ def profile(request):
                     user = User.objects.get(email=email)
                 except User.DoesNotExist:
                     user = _make_user(email)
+                profile.invite(user)
+                messages.success(request, "Invitation to %s sent!" % email)
                 # get the checks selected and add them to invited
                 # user as checks they have permissions on
                 # member = profile.objects.get(user=user)
@@ -188,8 +190,7 @@ def profile(request):
                         member.hcheck = key
                         member.save()
                 # add the user
-                profile.invite(user)
-                messages.success(request, "Invitation to %s sent!" % email)
+                
         elif "remove_team_member" in request.POST:
             form = RemoveTeamMemberForm(request.POST)
             if form.is_valid():
