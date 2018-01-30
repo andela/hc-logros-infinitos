@@ -126,7 +126,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-SITE_ROOT = "https://hclogros.herokuapp.com"
+SITE_ROOT = "https://hc-invite-member.herokuapp.com"
+# SITE_ROOT = "http://localhost:8000"
 SITE_NAME = "Health Checks"
 
 PING_ENDPOINT = SITE_ROOT + "/ping/"
