@@ -1,5 +1,6 @@
 from django import forms
 from hc.api.models import Channel
+from hc.front.models import Blog, Category
 
 
 class NameTagsForm(forms.Form):
@@ -43,3 +44,21 @@ class AddWebhookForm(forms.Form):
 
     def get_value(self):
         return "{value_down}\n{value_up}".format(**self.cleaned_data)
+
+class CreateBlogForm(forms.ModelForm):
+
+    class Meta:
+        model = Blog
+        fields = ['title', 'body']
+
+class CreateCategoryForm(forms.Form):
+    name = forms.CharField()
+
+class LowercaseEmailField(forms.EmailField):
+
+    def clean(self, value):
+        value = super(LowercaseEmailField, self).clean(value)
+        return value.lower()
+    
+class ShareBlogForm(forms.Form):
+    email = LowercaseEmailField()
