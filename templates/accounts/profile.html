@@ -22,41 +22,26 @@
     <div class="col-sm-6">
         <div class="panel panel-default">
             <div class="panel-body settings-block">
-                <form method="post">
+                <form method="post" class="form-inline" id="periodic">
                     {% csrf_token %}
-                    <h2>Periodic Reports</h2>
-                    <label>
-                        <input
-                            name="reports_allowed"
-                            type="radio"
-                            value="monthly"
-                            {% if profile.reports_allowed == "monthly" %} checked{% endif %}>
-                            Monthly
-                    </label>
-                    <label>
-                        <input
-                            name="reports_allowed"
-                            type="radio"
-                            value="weekly"
-                            {% if profile.reports_allowed == "weekly" %} checked {% endif %}>
-                            Weekly
-                    </label>
-                    <label>
-                        <input
-                            name="reports_allowed"
-                            type="radio"
-                            value="daily"
-                            {% if profile.reports_allowed == "daily" %} checked{% endif %}>
-                            Daily
-                    </label>
-                    <label>
-                        <input
-                            name="reports_allowed"
-                            type="radio"
-                            value="instant"
-                            {% if profile.reports_allowed == "instant" %} checked{% endif %}>
-                            Instant
-                    </label>
+                    <h2>Email reports</h2>
+                    <div class="btn-group" data-toggle="buttons">
+                        <label {% if profile.reports_allowed == "monthly" %} class="btn btn-primary"{% endif %} class="btn btn-default">
+                            <input name="reports_allowed" type="radio" value="monthly">Monthly
+                        </label>
+                        <label {% if profile.reports_allowed == "weekly" %} class="btn btn-primary"{% endif %} class="btn btn-default">
+                            <input name="reports_allowed" type="radio" value="weekly" 
+                            {% if profile.reports_allowed == "weekly" %} checked{% endif %}> Weekly
+                        </label>
+                        <label {% if profile.reports_allowed == "daily" %} class="btn btn-primary"{% endif %} class="btn btn-default">
+                            <input name="reports_allowed" type="radio" value="daily" 
+                            {% if profile.reports_allowed == "daily" %} checked{% endif %}> Daily
+                        </label>
+                        <label {% if profile.reports_allowed == "instant" %} class="btn btn-primary"{% endif %} class="btn btn-default">
+                            <input name="reports_allowed" type="radio" value="instant" 
+                            {% if profile.reports_allowed == "instant" %} checked{% endif %}> Instant
+                        </label>
+                    </div>
                     <button
                         name="update_reports_allowed"
                         type="submit"
