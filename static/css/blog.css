@@ -1,0 +1,12 @@
+
+@import url('https://fonts.googleapis.com/css?family=Gafata');
+
+.wmd-input {
+    height: 350px !important;
+    width: 50% !important;
+    background-color: white !important;
+    border: 1px solid DarkGray;}
+
+.message {
+    font-family: 'Gafata', sans-serif;
+}
