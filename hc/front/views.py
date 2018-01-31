@@ -67,7 +67,7 @@ def team_checks(request):
 
 @login_required
 def my_checks(request):
-    q = Check.objects.filter(user=request.team.user).order_by("created")
+    q = Check.objects.filter(user=request.team.user).order_by("created").order_by("priority")
     checks = list(q)
     print(checks)
     counter = Counter()
@@ -184,6 +184,7 @@ def update_name(request, code):
     if form.is_valid():
         check.name = form.cleaned_data["name"]
         check.tags = form.cleaned_data["tags"]
+        check.priority = form.cleaned_data["priority"]
         check.save()
 
     return redirect("hc-checks")
