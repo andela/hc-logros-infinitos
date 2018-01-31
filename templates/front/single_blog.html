@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %} Blog - healthchecks.io{% endblock %}
+
+{% block content %}
+
+{% if blog %}
+    <a href=""><b><u><h2>{{blog.title}}</h2></u></b></a>
+    <div>
+    <p>{{blog.body}}</p></div>
+    <i>Created on: {{blog.created_date|linebreaksbr}}</i><br><br>
+{% endif %}
+{% endblock %}

@@ -11,17 +11,16 @@
         {% endfor %}
     </div>
     {% endif %}
+    <a href="{%url 'hc-blog'%}" class="btn btn-primary">CATEGORIES</a>
 {% for blog in blogs %}
-            <a href=""><b><u><h2>{{blog.title}}</h2></u></b></a>
+            <a href="{% url 'hc-single-blog' cat_id=category blog_id=blog.id%}"><b><u><h2>{{blog.title}}</h2></u></b></a>
             <div>
             <p>{{blog.body}}</p></div>
             <i>Created on: {{blog.created_date|linebreaksbr}}</i><br><br>
             <a href="#" class="btn btn-info btn-sm" style="color:blue">
                 <span class="glyphicon glyphicon-pencil" style="color:blue"></span> Edit 
               </a>
-              <a href="#" class="btn btn-info btn-sm" style="color:darkred"
-                    data-toggle="modal"
-                    data-target="#remove-blog-modal">
+              <a href ="{% url 'hc-delete-blog' cat_id=category blog_id=blog.id %}" class="btn btn-info btn-sm" style="color:darkred">
                 <span class="glyphicon glyphicon-trash text-danger"></span> Delete 
               </a>
               <a href="#" class="btn btn-info btn-sm" style="color:green"
@@ -29,28 +28,11 @@
                     data-target="#share-blog-modal">
                 <span class="glyphicon glyphicon-share-alt text-success"></span> Share
               </a>
-          {% endfor %}  
-<div id="remove-blog-modal" class="modal">
-    <div class="modal-dialog">
-            <form id="remove-blog-form" method="post">
-                {% csrf_token %}
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="remove-blog-title">Delete <span class="remove-blog-title"></span></h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>You are about to delete a blog, Once it's gone there is no "undo" </p>
-                        <p>Are you sure?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="submit" name="delete-blog" class="btn btn-danger">Delete</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-</div>
+         
+{% endfor %}
+<br><br>
+<a href="{% url 'hc-add-blog' cat_id=category %}" class="btn btn-primary">ADD BLOG</a>
+
 <div id="share-blog-modal" class="modal">
     <div class="modal-dialog">
         <form method="post" class="form-horizontal">
@@ -87,27 +69,5 @@
     </div>
 </div>
 
-<div id="remove-blog-modal" class="modal">
-        <div class="modal-dialog">
-            <form id="remove-blog-form" method="post">
-                {% csrf_token %}
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="remove-blog-title">Delete <span class="remove-blog-title"></span></h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>You are about to delete a blog
-                        </p>
-                        <p>Once it's gone there is no "undo" </p>
-                        <p>Are you sure?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+
 {% endblock %}

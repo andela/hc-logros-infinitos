@@ -4,6 +4,13 @@
 {% block title %} Blog - healthchecks.io{% endblock %}
 
 {% block content %}
+{% if messages %}
+    <div class="col-sm-12">
+        {% for message in messages %}
+            <p class="alert alert-{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <div>
         <strong style="font-style:italic;"><h4>Create a blog category or click the Category Name to add blogs</h4></strong>
@@ -11,9 +18,11 @@
         {% for category in categories %}
         
         <a href="{% url 'hc-add-blog' cat_id=category.id %}"><b><h4>{{category.name}}</h4></b></a> 
-            
+    <a href ="{% url 'hc-delete-category' cat_id=category.id %}" class="btn btn-info btn-sm" style="color:darkred">
+      <span class="glyphicon glyphicon-trash text-danger"></span> Delete 
+    </a>
         {% endfor %}
-        </br>
+        </br></div><br>
         <a
         href="#"
         class="btn btn-primary"
