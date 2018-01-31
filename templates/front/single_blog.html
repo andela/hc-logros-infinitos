@@ -4,11 +4,61 @@
 {% block title %} Blog - healthchecks.io{% endblock %}
 
 {% block content %}
+{% if messages %}
+    <div class="col-sm-12">
+        {% for message in messages %}
+            <p class="alert alert-{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
 
 {% if blog %}
     <a href=""><b><u><h2>{{blog.title}}</h2></u></b></a>
     <div>
     <p>{{blog.body}}</p></div>
     <i>Created on: {{blog.created_date|linebreaksbr}}</i><br><br>
+
+<a href="#" class="btn btn-info btn-sm" style="color:green"
+      data-toggle="modal"
+      data-target="#share-blog-modal">
+  <span class="glyphicon glyphicon-share-alt text-success"></span> Share
+</a>
 {% endif %}
+
+<div id="share-blog-modal" class="modal">
+        <div class="modal-dialog">
+            <form method="post" class="form-horizontal">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="share-blog-title">Share Blog</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul>
+                            <li>Share your blog via email</li>
+                        </ul>
+                        <div class="form-group">
+                            <label for="itm-email" class="col-sm-2 control-label">Email</label>
+                            <div class="col-sm-9">
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    id="itm-email"
+                                    name="email"
+                                    placeholder="friend@example.org">
+                            </div>
+                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button
+                            type="submit"
+                            name="share-blog"
+                            class="btn btn-primary">Share Blog</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</fieldset>   
 {% endblock %}
