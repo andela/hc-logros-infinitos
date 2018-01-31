@@ -69,7 +69,6 @@ def team_checks(request):
 def my_checks(request):
     q = Check.objects.filter(user=request.team.user).order_by("created").order_by("priority")
     checks = list(q)
-    print(checks)
     counter = Counter()
     down_tags, grace_tags = set(), set()
     for check in checks:
@@ -370,7 +369,7 @@ def channel_checks(request, code):
         return HttpResponseForbidden()
 
     assigned = set(channel.checks.values_list('code', flat=True).distinct())
-    checks = Check.objects.filter(user=request.team.user).order_by("created")
+    checks = Check.objects.filter(user=request.team.user).order_by("created").order_by("priority")
 
     ctx = {
         "checks": checks,

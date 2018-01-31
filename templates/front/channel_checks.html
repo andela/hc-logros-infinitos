@@ -40,6 +40,23 @@
             {% endif %}
         </td>
         <td>
+            {% if check.priority == 0 %}                
+                <span class="label label label-danger">
+                    High priority
+                </span>
+            {% endif %}
+            {% if check.priority == 1 %}                
+                <span class="label label label-warning">
+                    Medium priority
+                </span>
+            {% endif %}
+            {% if check.priority == 2 %}                
+                <span class="label label label-info">
+                    Low priority
+                </span>
+            {% endif %}
+        </td>
+        <td>
             <code>{{ check.code }}</code>
         </td>
     </tr>

@@ -42,17 +42,17 @@
                 <span class="label label-tag">{{ tag }}</span>
                 {% endfor %}
                 <br>
-                {% if check.priority == "0" %}                
+                {% if check.priority == 0 %}                
                 <span class="label label label-danger">
                     High priority
                 </span>
                 {% endif %}
-                {% if check.priority == "1" %}                
+                {% if check.priority == 1 %}                
                 <span class="label label label-warning">
                     Medium priority
                 </span>
                 {% endif %}
-                {% if check.priority == "2" %}                
+                {% if check.priority == 2 %}                
                 <span class="label label label-info">
                     Low priority
                 </span>
