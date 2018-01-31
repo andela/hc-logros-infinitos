@@ -186,11 +186,12 @@ def add_blog(request, cat_id):
     if request.method == "POST":
         form = CreateBlogForm(request.POST)
         if form.is_valid():
+            title = request.POST['title']
+            blog = form.cleaned_data['body']
             category = Category.objects.get(id=cat_id)
-            blog = form.save(commit=False)
-            blog.created_date = timezone.now()
-            blog.category = category
-            blog.author = request.user
+            author = request.user
+            created_date = timezone.now()
+            blog = Blog(title=title, body=blog,category=category,created_date=created_date, author=author)
             blog.save()
 
             return redirect("hc-add-blog", cat_id=cat_id)
