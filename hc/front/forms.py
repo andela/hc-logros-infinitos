@@ -1,6 +1,7 @@
 from django import forms
 from hc.api.models import Channel
 from hc.front.models import Blog, Category
+from pagedown.widgets import PagedownWidget
 
 
 class NameTagsForm(forms.Form):
@@ -45,11 +46,8 @@ class AddWebhookForm(forms.Form):
     def get_value(self):
         return "{value_down}\n{value_up}".format(**self.cleaned_data)
 
-class CreateBlogForm(forms.ModelForm):
-
-    class Meta:
-        model = Blog
-        fields = ['title', 'body']
+class CreateBlogForm(forms.Form):
+    body = forms.CharField(widget = PagedownWidget)
 
 class CreateCategoryForm(forms.Form):
     name = forms.CharField()
