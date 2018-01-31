@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<a href="{% url 'hc-view-blog' cat_id=id %}"
+        class="btn btn-primary">View Blogs</a>
+<h4><p style="font-style:italic;"><strong>You can create and share blogs to contribute knowledge and expertise on automating business systems</strong></p></h4>
+
+<h1>Add blogs</h1>
+    <form method = "POST" class = "blog-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class= "btn btn-success"> Save</button>
+    </form>
+
+
+{% endblock %}
