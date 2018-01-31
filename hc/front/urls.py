@@ -36,10 +36,13 @@ urlpatterns = [
     url(r'^checks/add/$', views.add_check, name="hc-add-check"),
     url(r'^checks/([\w-]+)/', include(check_urls)),
     url(r'^integrations/', include(channel_urls)),
-
+    
     url(r'^docs/$', views.docs, name="hc-docs"),
     url(r'^docs/api/$', views.docs_api, name="hc-docs-api"),
     url(r'^about/$', views.about, name="hc-about"),
+    url(r'^blog/$', views.blog, name="hc-blog"),
+    url(r'^blog/add/(?P<cat_id>\d+)/$', views.add_blog, name="hc-add-blog"),
+    url(r'^blog/view/(?P<cat_id>\d+)/$', views.view_blog, name="hc-view-blog"),
     url(r'^privacy/$', views.privacy, name="hc-privacy"),
     url(r'^terms/$', views.terms, name="hc-terms"),
 ]
