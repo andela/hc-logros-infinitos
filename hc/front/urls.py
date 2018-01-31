@@ -41,8 +41,12 @@ urlpatterns = [
     url(r'^docs/api/$', views.docs_api, name="hc-docs-api"),
     url(r'^about/$', views.about, name="hc-about"),
     url(r'^blog/$', views.blog, name="hc-blog"),
+    url(r'^blog/delete/(?P<cat_id>\d+)/$', views.delete_category, name="hc-delete-category"),
     url(r'^blog/add/(?P<cat_id>\d+)/$', views.add_blog, name="hc-add-blog"),
+    url(r'^blog/(?P<cat_id>\d+)/view/(?P<blog_id>\d+)/$', views.view_single_blog, name="hc-single-blog"),
+    url(r'^blog/(?P<cat_id>\d+)/delete/(?P<blog_id>\d+)/$', views.delete_blog, name="hc-delete-blog"),
     url(r'^blog/view/(?P<cat_id>\d+)/$', views.view_blog, name="hc-view-blog"),
+    # url(r'^blog/display/$', views.display_blog, name="hc-display-blog"),
     url(r'^privacy/$', views.privacy, name="hc-privacy"),
     url(r'^terms/$', views.terms, name="hc-terms"),
 ]

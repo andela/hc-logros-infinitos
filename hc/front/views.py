@@ -15,11 +15,13 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.six.moves.urllib.parse import urlencode
 from hc.api.decorators import uuid_or_400
+from hc.lib import emails
 from hc.api.models import DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
 from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,
                             TimeoutForm, CreateBlogForm, CreateCategoryForm, ShareBlogForm)
 from hc.accounts.models import Member 
 from hc.front.models import Blog, Category
+from hc.accounts.views import *
 from django.contrib.auth.models import User
 
 # from itertools recipes:
@@ -198,6 +200,15 @@ def add_blog(request, cat_id):
     ctx = {"page": "blog", "form": form, "id": cat_id}
     return render(request, "front/add_blog.html", ctx)
 
+def send_blog_link(self, cat_id, inviting_profile=None):
+    user = Profile.objects.all()
+    path = reverse("hc-view-blog", cat_id=[cat_id])
+    ctx = {
+        "blog_link": settings.SITE_ROOT + path,
+        "inviting_profile": inviting_profile,
+    }
+    emails.share_blog(self, ctx, cat_id)
+
 @login_required
 def view_blog(request, cat_id):
     category = Category.objects.get(id=cat_id)
@@ -210,27 +221,40 @@ def view_blog(request, cat_id):
             if form.is_valid():
                 # send an email
                 email = form.cleaned_data["email"]
-                print(email)
-                try:
-                    user = User.objects.get(email=email)
-                except User.DoesNotExist:
-                    user = _make_user(email)
-                # profile.invite(user)
-                messages.success(request, "Blog link shared to %s" % email)
-    
 
-    return render(request, "front/view_blog.html", {"blogs": blogs})
+            send_blog_link(email, cat_id)
+            messages.success(request, "Blog link shared to %s" % email)
 
-def delete_blog(request):
+    return render(request, "front/view_blog.html", {"blogs": blogs , "category":category.id})
+
+@login_required
+def view_single_blog(request, cat_id, blog_id):
+    category = Category.objects.get(id=cat_id)
+    blog = Blog.objects.get(id=blog_id, category=category)
+
+    return render(request, "front/single_blog.html", {"blog":blog, "category":category.id , "id":blog_id})
+
+# def display_blog(request):
+#     category = Category.objects.get(id=cat_id)
+#     q = Blog.objects.filter(category=category).order_by('created_date')
+#     blogs = list(q)
+
+#     return render(request, "front/display.html", {"blogs": blogs , "category":category.id})
+
+
+def delete_blog(request, blog_id, cat_id):
     # delete blog
-    assert request.method == "POST"
-    if "delete-blog" in request.POST:
-        Blog.objects.filter(id=id)
-        blog = get_object_or_404(Blog)
-        print(blog)
-        blog.delete()
-        messages.info(request, "Blog deleted!")
-    return redirect("hc-view-blog")
+    blog = Blog.objects.get(id=blog_id)
+    blog.delete()
+    messages.info(request, "Blog deleted!")
+    return redirect("hc-view-blog", cat_id=cat_id)
+
+def delete_category(request, cat_id):
+    # delete category
+    category = Category.objects.get(id=cat_id)
+    category.delete()
+    messages.info(request, "Category deleted!")
+    return redirect("hc-blog")
 
 @login_required
 def add_check(request):
