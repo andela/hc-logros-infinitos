@@ -200,14 +200,14 @@ def add_blog(request, cat_id):
     ctx = {"page": "blog", "form": form, "id": cat_id}
     return render(request, "front/add_blog.html", ctx)
 
-def send_blog_link(self, cat_id, inviting_profile=None):
+def send_blog_link(self, cat_id, blog_id, inviting_profile=None):
     user = Profile.objects.all()
-    path = reverse("hc-view-blog", cat_id=[cat_id])
+    path = reverse("hc-single-blog", kwargs={'cat_id':cat_id, 'blog_id':blog_id})
     ctx = {
         "blog_link": settings.SITE_ROOT + path,
         "inviting_profile": inviting_profile,
     }
-    emails.share_blog(self, ctx, cat_id)
+    emails.share_blog(self, ctx, cat_id, blog_id)
 
 @login_required
 def view_blog(request, cat_id):
@@ -215,6 +215,12 @@ def view_blog(request, cat_id):
     q = Blog.objects.filter(category=category).order_by('created_date')
     blogs = list(q)
 
+    return render(request, "front/view_blog.html", {"blogs": blogs , "category":category.id})
+
+@login_required
+def view_single_blog(request, cat_id, blog_id):
+    category = Category.objects.get(id=cat_id)
+    blog = Blog.objects.get(id=blog_id, category=category)
     if request.method == "POST":
         if "share-blog" in request.POST:
             form = ShareBlogForm(request.POST)
@@ -222,25 +228,10 @@ def view_blog(request, cat_id):
                 # send an email
                 email = form.cleaned_data["email"]
 
-            send_blog_link(email, cat_id)
+            send_blog_link(email, cat_id, blog_id)
             messages.success(request, "Blog link shared to %s" % email)
 
-    return render(request, "front/view_blog.html", {"blogs": blogs , "category":category.id})
-
-@login_required
-def view_single_blog(request, cat_id, blog_id):
-    category = Category.objects.get(id=cat_id)
-    blog = Blog.objects.get(id=blog_id, category=category)
-
     return render(request, "front/single_blog.html", {"blog":blog, "category":category.id , "id":blog_id})
-
-# def display_blog(request):
-#     category = Category.objects.get(id=cat_id)
-#     q = Blog.objects.filter(category=category).order_by('created_date')
-#     blogs = list(q)
-
-#     return render(request, "front/display.html", {"blogs": blogs , "category":category.id})
-
 
 def delete_blog(request, blog_id, cat_id):
     # delete blog
