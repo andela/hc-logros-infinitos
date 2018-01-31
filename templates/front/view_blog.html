@@ -1,32 +1,44 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block title %} Blog - healthchecks.io{% endblock %}
-
+{% block title %} Blog - healthchecks.io{% endblock %} 
 {% block content %}
 {% if messages %}
     <div class="col-sm-12">
-        {% for message in messages %}
-            <p class="alert alert-{{ message.tags }}">{{ message }}</p>
-        {% endfor %}
-    </div>
-    {% endif %}
-    <a href="{%url 'hc-blog'%}" class="btn btn-primary">CATEGORIES</a>
+{% for message in messages %}
+<p class="alert alert-{{ message.tags }}">{{ message }}</p>
+{% endfor %}
+</div>
+{% endif %}
+<div class="container">
+        <ul class="nav nav-tabs">
+            <li><a href="{% url 'hc-add-blog' cat_id=category %}">Add blogs</a></li>
+            <li class="active"><a href="#"> View blogs</a></li>
+            <li><a href="{%url 'hc-blog'%}">Categories</a></li>
+        </ul>
+    </div><br>
+<main role="main" class="container">
+            <div class="row">
+            <div class="col-md-8 blog-main">
+    <!-- <a href="{%url 'hc-blog'%}" class="btn btn-primary">CATEGORIES</a> -->
 {% for blog in blogs %}
-            <a href="{% url 'hc-single-blog' cat_id=category blog_id=blog.id%}"><b><u><h2>{{blog.title}}</h2></u></b></a>
+            <a href="{% url 'hc-single-blog' cat_id=category blog_id=blog.id%}" style="font-family: 'Slabo 27px', serif;"><b><u><h2>{{blog.title}}</h2></u></b></a>
             <div>
-            <p>{{blog.body}}</p></div>
-            <i>Created on: {{blog.created_date|linebreaksbr}}</i><br><br>
-            <a href="#" class="btn btn-info btn-sm" style="color:blue">
+            <p style="font-family: 'Josefin Slab', serif; font-size:20px;">{{blog.body}}</p></div>
+            <b><i style="font-family: 'Pompiere', cursive; font-size:15px;">Created on: {{blog.created_date|linebreaksbr}}</i></b><br><br>
+            <!-- <a href="#" class="btn btn-info btn-sm" style="color:blue">
                 <span class="glyphicon glyphicon-pencil" style="color:blue"></span> Edit 
-              </a>
+              </a> -->
               <a href ="{% url 'hc-delete-blog' cat_id=category blog_id=blog.id %}" class="btn btn-info btn-sm" style="color:darkred">
                 <span class="glyphicon glyphicon-trash text-danger"></span> Delete </a>
                 
          
 {% endfor %}
+</div>
+</div>
+</main>
 <br><br>
-<a href="{% url 'hc-add-blog' cat_id=category %}" class="btn btn-primary">ADD BLOG</a>
+<!-- <a href="{% url 'hc-add-blog' cat_id=category %}" class="btn btn-primary">ADD BLOG</a> -->
 
 
 

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "share.html" %}
 {% load staticfiles %}
 
 {% block title %} Blog - healthchecks.io{% endblock %}
@@ -11,12 +11,14 @@
         {% endfor %}
     </div>
     {% endif %}
-
+<main role="main" class="container">
+            <div class="row">
+            <div class="col-md-8 blog-main">
 {% if blog %}
-    <a href=""><b><u><h2>{{blog.title}}</h2></u></b></a>
+    <a href="" style="font-family: 'Slabo 27px', serif;"><b><u><h2>{{blog.title}}</h2></u></b></a>
     <div>
-    <p>{{blog.body}}</p></div>
-    <i>Created on: {{blog.created_date|linebreaksbr}}</i><br><br>
+    <p style="font-family: 'Josefin Slab', serif; font-size:20px;">{{blog.body}}</p></div>
+    <i style="font-family: 'Pompiere', cursive; font-size:15px;">Created on: {{blog.created_date|linebreaksbr}}</i><br><br>
 
 <a href="#" class="btn btn-info btn-sm" style="color:green"
       data-toggle="modal"
@@ -24,6 +26,9 @@
   <span class="glyphicon glyphicon-share-alt text-success"></span> Share
 </a>
 {% endif %}
+</div>
+</div>
+</main>
 
 <div id="share-blog-modal" class="modal">
         <div class="modal-dialog">
