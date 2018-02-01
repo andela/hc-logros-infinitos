@@ -33,11 +33,13 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'compressor',
     'djmail',
+    'pagedown',
 
     'hc.accounts',
     'hc.api',
     'hc.front',
-    'hc.payments'
+    'hc.payments',
+    'hc.blogs'
 )
 
 MIDDLEWARE = (
@@ -126,7 +128,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-SITE_ROOT = "https://hclogros.herokuapp.com"
+SITE_ROOT = "http://localhost:8000"
 SITE_NAME = "Health Checks"
 
 PING_ENDPOINT = SITE_ROOT + "/ping/"

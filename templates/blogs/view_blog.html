@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %} Blog - healthchecks.io{% endblock %} 
+{% block content %}
+{% if messages %}
+    <div class="col-sm-12">
+{% for message in messages %}
+<p class="alert alert-{{ message.tags }}">{{ message }}</p>
+{% endfor %}
+</div>
+{% endif %}
+<div class="container">
+        <ul class="nav nav-tabs">
+            <li><a href="{% url 'hc-add-blog' cat_id=category %}">Add blogs</a></li>
+            <li class="active"><a href="#"> View blogs</a></li>
+            <li><a href="{%url 'hc-blog'%}">Categories</a></li>
+        </ul>
+    </div><br>
+<main role="main" class="container">
+            <div class="row">
+            <div class="col-md-8 blog-main">
+   {% for blog in blogs %}
+            <a class="blog-title" href="{% url 'hc-single-blog' cat_id=category blog_id=blog.id%}"><h2>{{blog.title}}</h2></a>
+            <div class="markdown">
+                <p>{{blog.body}}</p>
+           </div>
+            <span class='blog-meta'>Created: {{blog.created_date|timesince}} ago</span><br><br>
+              <a href ="{% url 'hc-delete-blog' cat_id=category blog_id=blog.id %}" class="btn btn-info btn-sm blog-del">
+                <span class="glyphicon glyphicon-trash"></span> Delete </a>
+         
+   {% endfor %}
+</div>
+</div>
+</main>
+<br><br>
+{% endblock %}

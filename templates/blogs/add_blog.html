@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+
+{% block blog_head %}
+    {{ form.media }}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#">Add blogs</a></li>
+        <li><a href="{% url 'hc-view-blog' cat_id=id %}"> View blogs</a></li>
+    </ul>
+</div><br>
+ <div class="message">
+    <h4><p><strong>You can create and share blogs to contribute knowledge and expertise on automating business systems</strong></p></h4>
+</div>
+    <form method = "POST" class = "blog-form">
+        {% csrf_token %}
+        <label for "title">Title:</label><br>
+        <input type="text" name="title" required="" style="box-shadow:0 0 1px #999; width:50%;" placeholder="Add title"><br><br>
+        {{ form }}
+        <div class="blog-submit">
+            <button type="submit" class= "btn btn-success"> Save</button>
+        </div>
+        
+    </form>
+
+{% endblock %}
