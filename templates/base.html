@@ -171,11 +171,13 @@
         </div>
     </footer>
 
+    {% block blog_head%} {% endblock %}
 
     {% block scripts %}
     {% compress js %}
     <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.12/marked.min.js"></script>
     {% endcompress %}
     {% endblock %}
 </body>

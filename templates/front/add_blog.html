@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+
+
 {% block blog_head %}
-<head>
     {{ form.media }}
-</head>
 {% endblock %}
+
+
 {% block content %}
 
 <div class="container">
@@ -21,8 +23,10 @@
         <label for "title">Title:</label><br>
         <input type="text" name="title" required="" style="box-shadow:0 0 1px #999; width:50%;" placeholder="Add title"><br><br>
         {{ form }}
-        <button type="submit" class= "btn btn-success"> Save</button>
+        <div class="blog-submit">
+            <button type="submit" class= "btn btn-success"> Save</button>
+        </div>
+        
     </form>
-
 
 {% endblock %}
