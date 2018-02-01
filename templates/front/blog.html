@@ -4,33 +4,54 @@
 {% block title %} Blog - healthchecks.io{% endblock %}
 
 {% block content %}
-{% if messages %}
-    <div class="col-sm-12">
-        {% for message in messages %}
-            <p class="alert alert-{{ message.tags }}">{{ message }}</p>
-        {% endfor %}
+<div class="row blogtitle">
+        {% if messages %}
+            <div class="col-sm-12">
+                {% for message in messages %}
+                    <p class="alert alert-{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="message">
+                <strong ><h4>Create a blog category or click the Category Name to add blogs</h4></strong>
+            </div>
     </div>
-    {% endif %}
-<div>
-    <div class="message">
-        <strong ><h4>Create a blog category or click the Category Name to add blogs</h4></strong></div>
-        
-        {% for category in categories %}
-        
-        <h4><a href="{% url 'hc-add-blog' cat_id=category.id %}" >{{category.name}}</h4></a> 
-    <a href ="{% url 'hc-delete-category' cat_id=category.id %}" class="btn btn-info btn-sm" style="color:darkred">
-      <span class="glyphicon glyphicon-trash text-danger"></span> Delete 
-    </a>
-        {% endfor %}
-        </br></div><br>
-        <a
-        href="#"
-        class="btn btn-primary"
-        data-toggle="modal"
-        data-target="#add-category-modal">ADD CATEGORY</a>
+    <div class="row">
+        <div class="col-md-3 ">
+            <h4>Blog Categories</h4>
+                {% for category in categories %}
+                <h4><a href="{% url 'hc-view-blog' cat_id=category.id %}" >{{category.name}}</a> </h4>
+            
+                {% endfor %}
+                <br><br>
+            <a
+            href="#"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#add-category-modal">ADD CATEGORY</a>
+        </div>
+        <div class="col-md-9">
+            <h3 style="text-align:center;"> All Blogs</h3>
+            {% if blogs %}
+            {% for blog in blogs %}
+                <div id="blogpost" class=" col-md-4 panel panel-default">
+                    <div class="panel-heading bloghead">
+                        <h3 class="panel-title">{{blog.title}}</h3>
+                    </div>
+                    <div class="panel-body">
+                        {{blog.body| truncatechars:90}}
+                    </div>
+                    
+                    <div class="panel-footer"><a href="{% url 'hc-single-blog' cat_id=blog.category.id  blog_id=blog.id%}">ReadMore</a></div>
+                </div>
+                {% endfor %}
+            
+            {% else %}
 
+            {% endif %}
+            
     </div>
-
+    </div>
 
 <div id="add-category-modal" class="modal">
     <div class="modal-dialog">

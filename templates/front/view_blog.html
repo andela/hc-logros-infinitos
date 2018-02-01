@@ -17,23 +17,41 @@
             <li><a href="{%url 'hc-blog'%}">Categories</a></li>
         </ul>
     </div><br>
-<main role="main" class="container">
-            <div class="row">
-            <div class="col-md-8 blog-main">
-   {% for blog in blogs %}
-            <a class="blog-title" href="{% url 'hc-single-blog' cat_id=category blog_id=blog.id%}"><h2>{{blog.title}}</h2></a>
-            <div class="markdown">
-                <p>{{blog.body}}</p>
-           </div>
-            <span class='blog-meta'>Created: {{blog.created_date|timesince}} ago</span><br><br>
-              <a href ="{% url 'hc-delete-blog' cat_id=category blog_id=blog.id %}" class="btn btn-info btn-sm blog-del">
-                <span class="glyphicon glyphicon-trash"></span> Delete </a>
-         
+
+<div class="row">
+<div class="col-md-9">
+{% if blogs %}
+{% for blog in blogs %}
+<h4>{{blog.category.name}} </h4>
+<a href ="{% url 'hc-delete-category' cat_id=blog.category.id %}" class="btn btn-info btn-sm" class="btn btn-info btn-sm blog-del">
+        <span class="glyphicon glyphicon-trash">Category</span> 
+        </a>
+        <br><br>
+    <div id="blogpost" class=" col-md-4 panel panel-default">
+        <div class="panel-heading bloghead">
+            <h3 class="panel-title">{{blog.title}}</h3>
+        </div>
+        <div class="panel-body">
+            {{blog.body| truncatechars:90}}
+        </div>
+        
+        <div class="panel-footer"><a href="{% url 'hc-single-blog' cat_id=blog.category.id  blog_id=blog.id%}">ReadMore</a></div>
+    </div>
+    <br>
+    <a href ="{% url 'hc-delete-blog' cat_id=category blog_id=blog.id %}" class="btn btn-info btn-sm blog-del">
+            <span class="glyphicon glyphicon-trash">blog</span></a> 
+            <br><br><br><br><br><br><br>  
    {% endfor %}
+   {% else %}
+   <div id="regret_message">
+   <div class="panel-body">
+        <h4>Hey! No blog posts in this category yet, Add blog!</h4>
+    </div>
+</div>
+
+   {% endif %}
 </div>
 </div>
-</main>
-<br><br>
 {% endblock %}
 
 

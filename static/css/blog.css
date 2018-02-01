@@ -63,9 +63,33 @@
     text-transform: uppercase;
     font-weight: 100;
     transition: background .5s ease-in;
+    padding-left: 4px;
 }
 .blog-del:hover{
     border:2px solid #de5252;
     background: transparent;
     color: #333;
+}
+#blogpost{
+    width:35%;
+    padding: 0;
+    padding-top: 0;
+    margin-left: 10px;
+}
+.bloghead{
+    width: 100%;
+}
+.blogtitle{
+    border-bottom: 4px solid black;
+}
+.blogbody{
+    border-bottom: 4px solid black;
+}
+#regret_message{
+    border-radius: 25px;
+    border: 1px solid black;
+    padding: 0px; 
+    width: 200px;
+    height: 150px; 
+    padding-left:40px;
 }

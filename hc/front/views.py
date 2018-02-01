@@ -178,7 +178,9 @@ def blog(request):
     #Query from the category table to get category name    
 
     categories = Category.objects.all()
-    ctx = {"page": "blog", "categories":categories}
+    blogs = Blog.objects.all()
+    print(blogs)
+    ctx = {"page": "blog", "categories":categories, "blogs":blogs}
     return render(request, "front/blog.html", ctx)
 
 @login_required
@@ -214,7 +216,6 @@ def view_blog(request, cat_id):
     category = Category.objects.get(id=cat_id)
     q = Blog.objects.filter(category=category).order_by('created_date')
     blogs = list(q)
-
     return render(request, "front/view_blog.html", {"blogs": blogs , "category":category.id})
 
 def view_single_blog(request, cat_id, blog_id):
