@@ -25,20 +25,17 @@
             <a href="{% url 'hc-single-blog' cat_id=category blog_id=blog.id%}" style="font-family: 'Slabo 27px', serif;"><b><u><h2>{{blog.title}}</h2></u></b></a>
             <div>
             <p style="font-family: 'Josefin Slab', serif; font-size:20px;">{{blog.body}}</p></div>
-            <b><i style="font-family: 'Pompiere', cursive; font-size:15px;">Created on: {{blog.created_date|linebreaksbr}}</i></b><br><br>
-            <!-- <a href="#" class="btn btn-info btn-sm" style="color:blue">
-                <span class="glyphicon glyphicon-pencil" style="color:blue"></span> Edit 
-              </a> -->
-              <a href ="{% url 'hc-delete-blog' cat_id=category blog_id=blog.id %}" class="btn btn-info btn-sm" style="color:darkred">
-                <span class="glyphicon glyphicon-trash text-danger"></span> Delete </a>
+            <b><i style="font-family: 'Pompiere', cursive; font-size:15px;">Created: {{blog.created_date|timesince}} ago</i></b><br><br>
                 
+
+    <a href ="{% url 'hc-delete-blog' cat_id=category blog_id=blog.id %}" class="btn btn-info btn-sm" style="color:darkred">
+        <span class="glyphicon glyphicon-trash text-danger"></span> Delete </a>
          
 {% endfor %}
 </div>
 </div>
 </main>
 <br><br>
-<!-- <a href="{% url 'hc-add-blog' cat_id=category %}" class="btn btn-primary">ADD BLOG</a> -->
 
 
 

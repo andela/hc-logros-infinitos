@@ -210,7 +210,6 @@ def send_blog_link(self, cat_id, blog_id, inviting_profile=None):
     }
     emails.share_blog(self, ctx, cat_id, blog_id)
 
-@login_required
 def view_blog(request, cat_id):
     category = Category.objects.get(id=cat_id)
     q = Blog.objects.filter(category=category).order_by('created_date')
@@ -218,7 +217,6 @@ def view_blog(request, cat_id):
 
     return render(request, "front/view_blog.html", {"blogs": blogs , "category":category.id})
 
-@login_required
 def view_single_blog(request, cat_id, blog_id):
     category = Category.objects.get(id=cat_id)
     blog = Blog.objects.get(id=blog_id, category=category)

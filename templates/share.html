@@ -48,7 +48,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand"
-                href="{% url 'hc-index' %}"
+                href="#"
                 title="healthchecks.io - Monitor Cron Jobs">
                 {% if request.user.is_authenticated %}
                 <img
@@ -69,12 +69,23 @@
                 {% endif %}
             </a>
             </div>
+            {% if request.user.is_authenticated %}
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{% url 'hc-view-blog' cat_id=category %}">BLOGS</a></li>
+            </ul>
+
+            {% else %}
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://localhost:8000">Log In</a></li>
+                </ul>
+                {% endif %}
             </div>
             </nav>
 
     {% block containers %}
     <div class="container">
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </div>
     {% endblock %}
 
