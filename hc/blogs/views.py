@@ -80,6 +80,7 @@ def view_blogs(request):
     return render(request, "blogs/view_blog.html", ctx)
 
 def single_blog(request, blog_id):
+    blog = Blog.objects.get(id=blog_id)
     if request.method == "POST":
         if "share-blog" in request.POST:
             form = ShareBlogForm(request.POST)
@@ -89,12 +90,6 @@ def single_blog(request, blog_id):
 
             send_blog_link(email, blog_id)
             messages.success(request, "Blog link shared to %s" % email)
-    else:
-        blog = Blog.objects.get(id=blog_id)
-        blog.delete()
-        messages.info(request, "Blog deleted!")
-        return redirect("hc-blog")
-
     ctx = {
         "blog": blog,
         "id": blog_id
@@ -106,4 +101,10 @@ def delete_category(request, cat_id):
     category.delete()
     messages.info(request, "Category deleted!")
     return redirect("hc-blog")
+
+def delete_blog(request,blog_id):
+    blog = Blog.objects.get(id=blog_id)
+    blog.delete()
+    messages.info(request, "Blog deleted!")
+    return redirect("hc-blog")  
 
