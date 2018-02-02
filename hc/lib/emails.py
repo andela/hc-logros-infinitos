@@ -27,5 +27,5 @@ def verify_email(to, ctx):
 def report(to, ctx):
     send("report", to, ctx)
 
-def share_blog(to, ctx, cat_id, blog_id):
-    send("blog", to, ctx, cat_id, blog_id)
+def share_blog(to, ctx, blog_id):
+    send("blog", to, ctx, blog_id)

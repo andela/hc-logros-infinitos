@@ -10,8 +10,14 @@ from hc.blogs.models import Blog, Category
 from django.contrib.auth.models import User
 from hc.blogs.forms import (CreateBlogForm, CreateCategoryForm, ShareBlogForm)
 
-def blog(request):
-    if request.method == "POST":      
+def categories(request, cat_id=None):
+    if request.method == "GET":
+        #Query from the category table to get category name    
+        categories = Category.objects.all()
+        ctx = {"page": "blog", "categories":categories}
+        return render(request, "blogs/view_blog.html", ctx)
+
+    elif request.method == "POST":
         if "add_category" in request.POST: 
             form = CreateCategoryForm(request.POST) 
             if form.is_valid():
@@ -23,15 +29,21 @@ def blog(request):
                         category.save()
                         
             return redirect("hc-blog")
-    #Query from the category table to get category name    
-
-    categories = Category.objects.all()
-    ctx = {"page": "blog", "categories":categories}
-    return render(request, "blogs/view_blog.html", ctx)
 
 @login_required
-def add_blog(request, cat_id):
-    if request.method == "POST":
+def blog(request, cat_id):
+    if request.method == "GET":
+        category = Category.objects.get(id=cat_id)
+        blogs = Blog.objects.filter(author=request.team.user, category=category)
+
+        ctx = {
+            "category": category,
+            "blogs": blogs
+        }
+
+        return render(request, "blogs/blog.html", ctx)
+
+    elif request.method == "POST":
         form = CreateBlogForm(request.POST)
         if form.is_valid():
             title = request.POST['title']
@@ -43,21 +55,19 @@ def add_blog(request, cat_id):
             blog.save()
 
             return redirect("hc-blog")
-    else:
-        form = CreateBlogForm()
 
     ctx = {"page": "blog", "form": form, "id": cat_id}
     return render(request, "blogs/add_blog.html", ctx)
 
-def send_blog_link(self, cat_id, blog_id, inviting_profile=None):
-    path = reverse("hc-single-blog", kwargs={'cat_id':cat_id, 'blog_id':blog_id})
+def send_blog_link(self, blog_id, inviting_profile=None):
+    path = reverse("hc-single-blog", kwargs={'blog_id':blog_id})
     ctx = {
         "blog_link": settings.SITE_ROOT + path,
         "inviting_profile": inviting_profile,
     }
-    emails.share_blog(self, ctx, cat_id, blog_id)
+    emails.share_blog(self, ctx, blog_id)
 
-def view_blog(request):
+def view_blogs(request):
     q = Blog.objects.filter(author=request.team.user)
     blogs = list(q)
     categories = Category.objects.all()        
@@ -69,9 +79,7 @@ def view_blog(request):
 
     return render(request, "blogs/view_blog.html", ctx)
 
-def view_single_blog(request, cat_id, blog_id):
-    category = Category.objects.get(id=cat_id)
-    blog = Blog.objects.get(id=blog_id, category=category)
+def single_blog(request, blog_id):
     if request.method == "POST":
         if "share-blog" in request.POST:
             form = ShareBlogForm(request.POST)
@@ -79,38 +87,23 @@ def view_single_blog(request, cat_id, blog_id):
                 # send an email
                 email = form.cleaned_data["email"]
 
-            send_blog_link(email, cat_id, blog_id)
+            send_blog_link(email, blog_id)
             messages.success(request, "Blog link shared to %s" % email)
+    else:
+        blog = Blog.objects.get(id=blog_id)
+        blog.delete()
+        messages.info(request, "Blog deleted!")
+        return redirect("hc-blog")
 
     ctx = {
-        "category": category.id,
         "blog": blog,
         "id": blog_id
-    }
-    # import pdb; pdb.set_trace()    
+    } 
     return render(request, "blogs/single_blog.html", ctx)
 
-def view_category_posts(request, cat_id):
-    category = Category.objects.get(id=cat_id)
-    blogs = Blog.objects.filter(author=request.team.user, category=category)
-
-    ctx = {
-        "category": category,
-        "blogs": blogs
-    }
-
-    return render(request, "blogs/blog.html", ctx)
-
-def delete_blog(request, blog_id, cat_id):
-    # delete blog
-    blog = Blog.objects.get(id=blog_id)
-    blog.delete()
-    messages.info(request, "Blog deleted!")
-    return redirect("hc-blog")
-
 def delete_category(request, cat_id):
-    # delete category
     category = Category.objects.get(id=cat_id)
     category.delete()
     messages.info(request, "Category deleted!")
     return redirect("hc-blog")
+

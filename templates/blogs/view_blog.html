@@ -43,7 +43,7 @@
 <hr>
     {% if blogs %}
     {% for blog in blogs %}
-        <a class="blog-title" href="{% url 'hc-single-blog' cat_id=blog.category.id blog_id=blog.id %}"><h2>{{blog.title}}</h2></a>
+        <a class="blog-title" href="{% url 'hc-single-blog' blog_id=blog.id %}"><h2>{{blog.title}}</h2></a>
         <div class="markdown">
             <p>{{blog.body}}</p>
     </div>
