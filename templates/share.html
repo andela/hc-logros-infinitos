@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="{% static 'css/log.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/add_pushover.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/settings.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}" type="text/css">
     {% endcompress %}
 </head>
 <body class="page-{{ page }}">
@@ -71,7 +72,7 @@
             </div>
             {% if request.user.is_authenticated %}
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="">BLOGS</a></li>
+                <li><a href="{% url 'hc-blog' %}">BLOGS</a></li>
             </ul>
 
             {% else %}

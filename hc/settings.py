@@ -33,7 +33,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'compressor',
     'djmail',
-    'pagedown',
+    'pagedown'
 
     'hc.accounts',
     'hc.api',

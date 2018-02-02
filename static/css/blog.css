@@ -1,22 +1,49 @@
 @import url('https://fonts.googleapis.com/css?family=Gafata');
 @import url('https://fonts.googleapis.com/css?family=Montserrat|Open+Sans+Condensed:300');
+.blog-container{
+    width: 100%;
+    margin: 0 auto;
+}
 .wmd-input {
     height: 200px !important;
     width: 100% !important;
     background-color: white !important;
     border: 1px solid DarkGray;
-    right: 150px;}    
+    right: 150px;
+}    
 
 .message {
     font-family: 'Gafata', sans-serif;
+    text-align: justify;
+    width: 80%;
+    margin: 0 auto;
+}
+.blog-container form{
+    width: 80%;
+    margin: 0 auto;
 }
 
-.wmd-panel {
+.blog-container form label{
+    font-family: 'Gafata', sans-serif;
+    font-size: 1.4em;
+}
+.blog-container form .errorlist li{
+    color: red;
+}
+
+.blog-container form .wmd-wrapper{
+    width: 100%;
+    margin: 0 auto;
+}
+.blog-container form .wmd-wrapper .wmd-panel {
     margin-left: 0% !important;
+    margin-right: 0% !important;
+    width: 100%;
+    margin: 0 auto;
 }
 
 .blog-submit{
-    width: 40%;
+    width: 100%;
     margin: 0 auto;
 }
 

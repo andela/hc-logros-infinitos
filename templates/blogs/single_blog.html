@@ -16,18 +16,20 @@
             <div class="row">
             <div class="col-md-8 blog-main">
 {% if blog %}
-<a class="blog-title" href="{% url 'hc-single-blog' cat_id=category blog_id=blog.id %}"><h2>{{blog.title}}</h2></a>
+<div class="col-sm-offset-3 col-sm-6">
+<a class="blog-title" href="#"><h2>{{blog.title}}</h2></a>
 <div class="markdown">
     <p>{{blog.body}}</p>
 </div>
 <span class='blog-meta'>Created: {{blog.created_date|timesince}} ago</span><br><br>
 
 
-<a href="#" class="btn btn-info btn-sm" style="color:green"
+<a href="#" class="btn btn-success"
       data-toggle="modal"
       data-target="#share-blog-modal">
-  <span class="glyphicon glyphicon-share-alt text-success"></span> Share
+  <span class="glyphicon glyphicon-share-alt"></span> Share
 </a>
+</div>
 {% endif %}
 </div>
 </div>
@@ -59,6 +61,7 @@
                         </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        
                         <button
                             type="submit"
                             name="share-blog"
