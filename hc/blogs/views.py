@@ -27,7 +27,7 @@ def blog(request):
 
     categories = Category.objects.all()
     ctx = {"page": "blog", "categories":categories}
-    return render(request, "blogs/blog.html", ctx)
+    return render(request, "blogs/view_blog.html", ctx)
 
 @login_required
 def add_blog(request, cat_id):
@@ -42,7 +42,7 @@ def add_blog(request, cat_id):
             blog = Blog(title=title, body=blog,category=category,created_date=created_date, author=author)
             blog.save()
 
-            return redirect("hc-add-blog", cat_id=cat_id)
+            return redirect("hc-blog")
     else:
         form = CreateBlogForm()
 
@@ -50,7 +50,6 @@ def add_blog(request, cat_id):
     return render(request, "blogs/add_blog.html", ctx)
 
 def send_blog_link(self, cat_id, blog_id, inviting_profile=None):
-    user = Profile.objects.all()
     path = reverse("hc-single-blog", kwargs={'cat_id':cat_id, 'blog_id':blog_id})
     ctx = {
         "blog_link": settings.SITE_ROOT + path,
@@ -58,12 +57,17 @@ def send_blog_link(self, cat_id, blog_id, inviting_profile=None):
     }
     emails.share_blog(self, ctx, cat_id, blog_id)
 
-def view_blog(request, cat_id):
-    category = Category.objects.get(id=cat_id)
-    q = Blog.objects.filter(category=category).order_by('created_date')
+def view_blog(request):
+    q = Blog.objects.filter(author=request.team.user)
     blogs = list(q)
+    categories = Category.objects.all()        
+    ctx = {
+        "page": "blogs",
+        "blogs": blogs,
+        "categories": categories
+    }
 
-    return render(request, "blogs/view_blog.html", {"blogs": blogs , "category":category.id})
+    return render(request, "blogs/view_blog.html", ctx)
 
 def view_single_blog(request, cat_id, blog_id):
     category = Category.objects.get(id=cat_id)
@@ -78,14 +82,31 @@ def view_single_blog(request, cat_id, blog_id):
             send_blog_link(email, cat_id, blog_id)
             messages.success(request, "Blog link shared to %s" % email)
 
-    return render(request, "blogs/single_blog.html", {"blog":blog, "category":category.id , "id":blog_id})
+    ctx = {
+        "category": category.id,
+        "blog": blog,
+        "id": blog_id
+    }
+    # import pdb; pdb.set_trace()    
+    return render(request, "blogs/single_blog.html", ctx)
+
+def view_category_posts(request, cat_id):
+    category = Category.objects.get(id=cat_id)
+    blogs = Blog.objects.filter(author=request.team.user, category=category)
+
+    ctx = {
+        "category": category,
+        "blogs": blogs
+    }
+
+    return render(request, "blogs/blog.html", ctx)
 
 def delete_blog(request, blog_id, cat_id):
     # delete blog
     blog = Blog.objects.get(id=blog_id)
     blog.delete()
     messages.info(request, "Blog deleted!")
-    return redirect("hc-view-blog", cat_id=cat_id)
+    return redirect("hc-blog")
 
 def delete_category(request, cat_id):
     # delete category

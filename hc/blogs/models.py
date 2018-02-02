@@ -5,6 +5,7 @@ from django.utils import timezone
 class Category(models.Model):
     name = models.CharField(max_length=100)
 
+
 class Blog(models.Model):
     title = models.CharField(max_length=200)
     author = models.ForeignKey(User)

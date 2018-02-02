@@ -16,7 +16,7 @@
             <div class="row">
             <div class="col-md-8 blog-main">
 {% if blog %}
-<a class="blog-title" href="{% url 'hc-single-blog' cat_id=category blog_id=blog.id%}"><h2>{{blog.title}}</h2></a>
+<a class="blog-title" href="{% url 'hc-single-blog' cat_id=category blog_id=blog.id %}"><h2>{{blog.title}}</h2></a>
 <div class="markdown">
     <p>{{blog.body}}</p>
 </div>
