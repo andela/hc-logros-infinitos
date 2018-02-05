@@ -181,9 +181,17 @@ def update_name(request, code):
 
     form = NameTagsForm(request.POST)
     if form.is_valid():
-        check.name = form.cleaned_data["name"]
-        check.tags = form.cleaned_data["tags"]
-        check.priority = form.cleaned_data["priority"]
+        check_name = form.cleaned_data["name"]
+        tags = form.cleaned_data["tags"]
+        priority = form.cleaned_data["priority"]
+
+        check.name = check_name
+        check.tags = tags
+        if priority:
+            check.priority = priority
+        else:
+            check.priority = check.priority
+            
         check.save()
 
     return redirect("hc-checks")
