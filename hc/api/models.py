@@ -18,7 +18,7 @@ STATUSES = (
     ("paused", "Paused"),
     ("often", "Often")
 )
-PRIORITIES = ( (0, "High"), (1, "Medium"), (2, "Low"), (3, "None") )
+PRIORITIES = ((0, "High"), (1, "Medium"), (2, "Low"), (3, "None"))
 DEFAULT_TIMEOUT = td(days=1)
 DEFAULT_GRACE = td(hours=1)
 DEFAULT_NAG = td(hours=1)
