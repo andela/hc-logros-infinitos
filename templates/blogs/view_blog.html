@@ -18,7 +18,7 @@
                 <ul>
                 
                 {% for category in categories %}
-                    <li><a href="{% url 'hc-view-category-posts' category.id %}">{{ category.name }}</a></li>
+                    <li><a href="{% url 'hc-category' category.id %}">{{ category.name }}</a></li>
                 {% endfor %}
                 </ul>
             </li>
@@ -43,7 +43,7 @@
 <hr>
     {% if blogs %}
     {% for blog in blogs %}
-        <a class="blog-title" href="{% url 'hc-single-blog' blog_id=blog.id %}"><h2>{{blog.title}}</h2></a>
+        <a class="blog-title" href="{% url 'hc-single-blog' cat_id=blog.category.id blog_id=blog.id %}"><h2>{{blog.title}}</h2></a>
         <div class="markdown">
             <p>{{blog.body}}</p>
     </div>
@@ -103,4 +103,6 @@
             </form>
         </div>
     </div>
+
+    
 {% endblock %}
