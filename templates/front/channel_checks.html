@@ -17,7 +17,7 @@
                 type="checkbox"
                 class="toggle" />
         </th>
-        <th class="check-all-cell" colspan="2">
+        <th class="check-all-cell" colspan="4">
             Select / Unselect All
         </th>
     </tr>
@@ -37,6 +37,23 @@
                 {{ check.name }}
             {% else %}
                 <span class="unnamed">unnamed</span>
+            {% endif %}
+        </td>
+        <td>
+            {% if check.priority == 0 %}                
+                <span class="label label label-danger">
+                    High priority
+                </span>
+            {% endif %}
+            {% if check.priority == 1 %}                
+                <span class="label label label-warning">
+                    Medium priority
+                </span>
+            {% endif %}
+            {% if check.priority == 2 %}                
+                <span class="label label label-info">
+                    Low priority
+                </span>
             {% endif %}
         </td>
         <td>

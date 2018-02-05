@@ -1,58 +1,138 @@
 {% extends "base.html" %}
 {% load compress staticfiles %}
+{% load hc_extras humanize %}
 
-{% block title %}My Checks - healthchecks.io{% endblock %}
+{% block title %}Team Checks - healthchecks.io{% endblock %}
 
 
 {% block content %}
 
-<div class="row">
-    <div class="col-sm-12">
-        <h1>
-        {% if request.team == request.user.profile %}
-            My Checks
-        {% else %}
-            {{ request.team.team_name }}
-        {% endif %}
-        </h1>
-    </div>
-    {% if tags %}
-    <div id="my-checks-tags" class="col-sm-12">
-        {% for tag, count in tags %}
-            {% if tag in down_tags %}
-                <button class="btn btn-danger btn-xs" data-toggle="button">{{ tag }}</button>
-            {% elif tag in grace_tags %}
-                <button class="btn btn-warning btn-xs" data-toggle="button">{{ tag }}</button>
-            {% else %}
-                <button class="btn btn-default btn-xs" data-toggle="button">{{ tag }}</button>
+<table id="checks-table" class="table hidden-xs">
+    <tr>
+        <th></th>
+        <th class="th-name">Name</th>
+        <th>Ping URL</th>
+        <th class="th-period">
+            Period <br />
+            <span class="checks-subline">Grace</span>
+            <br />
+            <span class="checks-subline">Nag interval</span>
+        </th>
+        <th>Last Ping</th>
+        <th></th>
+    </tr>
+    {% for check in checks %}
+    <tr class="checks-row">
+        <td class="indicator-cell">
+            {% if check.get_status == "new" %}
+                <span class="status icon-up new"
+                    data-toggle="tooltip" title="New. Has never received a ping."></span>
+            {% elif check.get_status == "paused" %}
+                <span class="status icon-paused"
+                    data-toggle="tooltip" title="Monitoring paused. Ping to resume."></span>
+            {% elif check.in_grace_period %}
+                <span class="status icon-grace"></span>
+            {% elif check.get_status == "up" %}
+                <span class="status icon-up"></span>
+            {% elif check.get_status == "often" %}
+                <span class="status icon-down" style="color:#e2d948"></span>
+            {% elif check.get_status == "down" %}
+                <span class="status icon-down"></span>
             {% endif %}
-        {% endfor %}
-    </div>
-    {% endif %}
+        </td>
+        <td class="name-cell">
+            <div data-name="{{ check.name }}"
+                    data-tags="{{ check.tags }}"
+                    data-url="{% url 'hc-update-name' check.code %}"
+                    class="my-checks-name {% if not check.name %}unnamed{% endif %}">
+                <div>{{ check.name|default:"unnamed" }}</div>
+                {% for tag in check.tags_list %}
+                <span class="label label-tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </td>
+        <td class="url-cell">
+            <span class="my-checks-url">
+                <span class="base">{{ ping_endpoint }}</span>{{ check.code }}
+            </span>
+            <button
+                class="copy-link hidden-sm"
+                data-clipboard-text="{{ check.url }}">
+                copy
+            </button>
+        </td>
+        <td class="timeout-cell">
+            <span
+                data-url="{% url 'hc-update-timeout' check.code %}"
+                data-timeout="{{ check.timeout.total_seconds }}"
+                data-grace="{{ check.grace.total_seconds }}"
+                data-nag="{{ check.nag_interval.total_seconds }}"
+                class="timeout-grace">
+                {{ check.timeout|hc_duration }}
+                <br />
+                <span class="checks-subline">
+                {{ check.grace|hc_duration }}
+                </span>
+                <br />
+                <span class="checks-subline">
+                {{ check.nag_interval|hc_duration }}
+                </span>
+            </span>
+        </td>
+        <td>
+        {% if check.last_ping %}
+            <span
+                data-toggle="tooltip"
+                title="{{ check.last_ping|date:'N j, Y, P e' }}">
+                {{ check.last_ping|naturaltime }}
+            </span>
+        {% else %}
+            Never
+        {% endif %}
+        </td>
+        <td>
+            <div class="check-menu dropdown">
+                <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                <span class="icon-settings" aria-hidden="true"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li {% if check.status == "new" or check.status == "paused" %}class="disabled"{% endif %}>
+                        <a class="pause-check"
+                           href="#"
+                           data-url="{% url 'hc-pause' check.code %}">
+                           Pause Monitoring
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a href="{% url 'hc-log' check.code %}">
+                            Log
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="#"
+                            class="usage-examples"
+                            data-url="{{ check.url }}"
+                            data-email="{{ check.email }}">
+                            Usage Examples
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a href="#" class="check-menu-remove"
+                            data-name="{{ check.name_then_code }}"
+                            data-url="{% url 'hc-remove-check' check.code %}">
+                            Remove
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
 
-</div>
-<div class="row">
-    <div class="col-sm-12">
-
-
-    {% if checks %}
-        {% include "front/my_checks_mobile.html" %}
-        {% include "front/my_checks_desktop.html" %}
-        
-    {% else %}
-    <div class="alert alert-info">You don't have any checks yet.</div>
-    {% endif %}
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-12">
-        <form method="post" action="{% url 'hc-add-check' %}" class="text-center">
-            {% csrf_token %}
-            <input type="submit" class="btn btn-primary btn-lg" value="Add Check">
-        </form>
-    </div>
-</div>
-
+</table>
 <div id="update-name-modal" class="modal">
     <div class="modal-dialog">
         <form id="update-name-form" class="form-horizontal" method="post">
@@ -60,7 +140,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="update-timeout-title">Name, Tags and Priority</h4>
+                    <h4 class="update-timeout-title">Name and Tags</h4>
                 </div>
                 <div class="modal-body">
                         <div class="form-group">
@@ -102,22 +182,6 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="update-tags-input" class="col-sm-2 control-label">
-                                Priority
-                            </label>
-                            <div class="col-sm-9">
-                                <div class="radio" >
-                                    <label><input type="radio" id="high" name="priority" value=0>High</label>
-                                </div>
-                                <div class="radio">
-                                    <label><input type="radio" id="medium" name="priority" value=1>Medium</label>
-                                </div>
-                                <div class="radio">
-                                    <label><input type="radio" id="low" name="priority" value=2>Low</label>
-                                </div>
-                            </div>
-                        </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -127,7 +191,6 @@
         </form>
     </div>
 </div>
-
 <div id="update-timeout-modal" class="modal">
     <div class="modal-dialog">
         <form id="update-timeout-form" method="post">
@@ -229,116 +292,6 @@
         </form>
     </div>
 </div>
-
-<div id="remove-check-modal" class="modal">
-    <div class="modal-dialog">
-        <form id="remove-check-form" method="post">
-            {% csrf_token %}
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="remove-check-title">Remove Check <span class="remove-check-name"></span></h4>
-                </div>
-                <div class="modal-body">
-                    <p>You are about to remove check
-                        <strong class="remove-check-name">---</strong>.
-                    </p>
-                    <p>Once it's gone there is no "undo" and you cannot get
-                    the old ping URL back.</p>
-                    <p>Are you sure?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger">Remove</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div id="show-usage-modal" class="modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <ul class="nav nav-pills" role="tablist">
-                    <li class="active">
-                        <a href="#crontab" data-toggle="tab">Crontab</a>
-                    </li>
-                    <li>
-                        <a href="#bash" data-toggle="tab">Bash</a>
-                    </li>
-                    <li>
-                        <a href="#python" data-toggle="tab">Python</a>
-                    </li>
-                    <li class="hidden-xs">
-                        <a href="#node" data-toggle="tab">Node.js</a>
-                    </li>
-                    <li class="hidden-xs">
-                        <a href="#php" data-toggle="tab">PHP</a>
-                    </li>
-                    <li class="hidden-xs">
-                        <a href="#browser" data-toggle="tab">Browser</a>
-                    </li>
-                    <li class="hidden-xs">
-                        <a href="#powershell" data-toggle="tab">PowerShell</a>
-                    </li>
-                    <li class="hidden-xs">
-                        <a href="#email" data-toggle="tab">Email</a>
-                    </li>
-                </ul>
-
-            </div>
-            <div class="modal-body">
-
-
-                <div class="tab-content">
-                    {% with ping_url="<span class='ex'></span>" %}
-                    <div role="tabpanel" class="tab-pane active" id="crontab">
-                        {% include "front/snippets/crontab.html" %}
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="bash">
-                        {% include "front/snippets/bash.html" %}
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="python">
-                        {% include "front/snippets/python.html" %}
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="node">
-                        {% include "front/snippets/node.html" %}
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="php">
-                        {% include "front/snippets/php.html" %}
-                    </div>
-                    <div class="tab-pane" id="browser">
-                        {% include "front/snippets/browser.html" %}
-                    </div>
-                    <div class="tab-pane" id="powershell">
-                        {% include "front/snippets/powershell.html" %}
-                    </div>
-                    <div class="tab-pane" id="email">
-                            As an alternative to HTTP/HTTPS requests,
-                            you can "ping" this check by sending an
-                            email message to
-                            <div class="email-address">
-                                <code class="em"></code>
-                            </div>
-                    </div>
-                    {% endwith %}
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Got It!</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<form id="pause-form" method="post">
-    {% csrf_token %}
-</form>
-
-
 {% endblock %}
 
 {% block scripts %}
@@ -348,19 +301,5 @@
 <script src="{% static 'js/nouislider.min.js' %}"></script>
 <script src="{% static 'js/clipboard.min.js' %}"></script>
 <script src="{% static 'js/checks.js' %}"></script>
-<!-- <script>
-    $(function(){
-        if ($('#check-0').length) {
-            $('#high').attr('checked', true);
-        }
-        else if ($('#check-1').length) {
-            $('#medium').attr('checked', true);
-        }
-        else if ($('#check-2').length) {
-            $('#low').attr('checked', true);
-        }
-    });
-</script> -->
-
 {% endcompress %}
 {% endblock %}
