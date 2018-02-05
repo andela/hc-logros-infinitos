@@ -5,7 +5,6 @@
 
 
 {% block content %}
-
 <div class="row">
     <div class="col-sm-12">
         <h1>
@@ -38,7 +37,6 @@
     {% if checks %}
         {% include "front/my_checks_mobile.html" %}
         {% include "front/my_checks_desktop.html" %}
-        
     {% else %}
     <div class="alert alert-info">You don't have any checks yet.</div>
     {% endif %}
@@ -60,7 +58,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="update-timeout-title">Name, Tags and Priority</h4>
+                    <h4 class="update-timeout-title">Name and Tags</h4>
                 </div>
                 <div class="modal-body">
                         <div class="form-group">
@@ -102,22 +100,6 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="update-tags-input" class="col-sm-2 control-label">
-                                Priority
-                            </label>
-                            <div class="col-sm-9">
-                                <div class="radio" >
-                                    <label><input type="radio" id="high" name="priority" value=0>High</label>
-                                </div>
-                                <div class="radio">
-                                    <label><input type="radio" id="medium" name="priority" value=1>Medium</label>
-                                </div>
-                                <div class="radio">
-                                    <label><input type="radio" id="low" name="priority" value=2>Low</label>
-                                </div>
-                            </div>
-                        </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -134,8 +116,6 @@
             {% csrf_token %}
             <input type="hidden" name="timeout" id="update-timeout-timeout" />
             <input type="hidden" name="grace" id="update-timeout-grace" />
-            <input type="hidden" name="nag_interval" id="update-timeout-nag_interval" />
-            <input type="hidden" name="nag_mode" id="update-timeout-nag_mode" />
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="update-timeout-info text-center">
@@ -169,42 +149,6 @@
 
                     <div id="grace-slider"></div>
 
-                    <div class="update-timeout-info text-center" style="margin-bottom:15px;">
-                        <span
-                            class="update-timeout-label"
-                            data-toggle="tooltip"
-                            title="Tag Nag Mode on.">
-                            Nag Mode
-                        </span>
-                        <span
-                            id="nagcheck-value"
-                            class="update-timeout-value">
-                            False
-                        </span>
-                        <br>
-                        <br>
-                        <label class="switch">
-                            <input type="checkbox" id="nag_checker" onclick="toggleTrue()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>    
-
-                    <div class="update-timeout-info text-center">
-                        <span
-                            class="update-timeout-label"
-                            data-toggle="tooltip"
-                            title="After notification, time to wait until next notification.">
-                            Nag Time
-                        </span>
-                        <span
-                            id="nag-slider-value"
-                            class="update-timeout-value">
-                            1 day
-                        </span>
-                    </div>
-
-                    <div id="nag-slider"></div>
-
                     <div class="update-timeout-terms">
                         <p>
                             <span>Period</span>
@@ -213,10 +157,6 @@
                         <p>
                             <span>Grace Time</span>
                             When a check is late, how much time to wait until alert is sent.
-                        </p>
-                        <p>
-                            <span>Nag Time</span>
-                            After notification, time to wait until next notification.
                         </p>
                     </div>
 
@@ -338,7 +278,6 @@
     {% csrf_token %}
 </form>
 
-
 {% endblock %}
 
 {% block scripts %}
@@ -348,19 +287,5 @@
 <script src="{% static 'js/nouislider.min.js' %}"></script>
 <script src="{% static 'js/clipboard.min.js' %}"></script>
 <script src="{% static 'js/checks.js' %}"></script>
-<!-- <script>
-    $(function(){
-        if ($('#check-0').length) {
-            $('#high').attr('checked', true);
-        }
-        else if ($('#check-1').length) {
-            $('#medium').attr('checked', true);
-        }
-        else if ($('#check-2').length) {
-            $('#low').attr('checked', true);
-        }
-    });
-</script> -->
-
 {% endcompress %}
 {% endblock %}

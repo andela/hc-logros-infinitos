@@ -38,20 +38,8 @@
 #grace-slider.noUi-connect {
   background: #f0ad4e;
 }
-#nag-slider {
-    margin: 20px 50px 110px 50px;
-}
 
-#nag-slider.noUi-connect {
-  background: #f0ad4e;
-} 
-#nag_check{
-    width: 470px;
-    background-color: #fafafa;
-    border-radius: 3px;
-}
-
-#period-slider .noUi-value, #grace-slider .noUi-value, #nag-slider .noUi-value {
+#period-slider .noUi-value, #grace-slider .noUi-value {
     width: 60px;
     margin-left: -30px;
 }

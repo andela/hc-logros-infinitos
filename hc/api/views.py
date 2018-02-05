@@ -20,21 +20,14 @@ def ping(request, code):
         check = Check.objects.get(code=code)
     except Check.DoesNotExist:
         return HttpResponseBadRequest()
+
     check.n_pings = F("n_pings") + 1
-    if check.last_ping is not None:
-        check.ping_diff = timezone.now() - check.last_ping
     check.last_ping = timezone.now()
-        
     if check.status in ("new", "paused"):
         check.status = "up"
-    if(check.ping_diff):
-        if check.status=="up" and check.ping_diff < (check.timeout - check.grace):
-            check.status = "often"
+
     check.save()
     check.refresh_from_db()
-    # send alert for fast
-    if check.status == "often":
-        check.send_alert()
 
     ping = Ping(owner=check)
     headers = request.META
@@ -65,18 +58,10 @@ def checks(request):
         check = Check(user=request.user)
         check.name = str(request.json.get("name", ""))
         check.tags = str(request.json.get("tags", ""))
-        if "nag_mode" in request.json:
-            str_text = request.json["nag_mode"]
-            if str_text == "True": 
-                check.nag_mode = True
-            else: 
-                check.nag_mode = False
         if "timeout" in request.json:
             check.timeout = td(seconds=request.json["timeout"])
         if "grace" in request.json:
             check.grace = td(seconds=request.json["grace"])
-        if "nag_interval" in request.json:
-            check.nag_interval = td(seconds=request.json["nag_interval"])
 
         check.save()
 
@@ -125,7 +110,6 @@ def badge(request, username, signature, tag):
         if check.get_status() == "down":
             status = "down"
             break
-
 
     svg = get_badge_svg(tag, status)
     return HttpResponse(svg, content_type="image/svg+xml")

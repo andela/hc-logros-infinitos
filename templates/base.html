@@ -76,9 +76,7 @@
                     <li {% if page == 'checks' %} class="active" {% endif %}>
                         <a href="{% url 'hc-checks' %}">Checks</a>
                     </li>
-                    <li {% if page == 'team_checks' %} class="active" {% endif %}>
-                        <a href="{% url 'hc-team-checks' %}">Team Checks</a>
-                    </li>
+
                     <li {% if page == 'channels' %} class="active" {% endif %}>
                         <a href="{% url 'hc-channels' %}">Integrations</a>
                     </li>
@@ -126,13 +124,13 @@
                         <li><a href="{% url 'hc-profile' %}">Account Settings</a></li>
                         <li role="separator" class="divider"></li>
 
-                        <!-- {% for team in request.teams %}
+                        {% for team in request.teams %}
                         <li class="dropdown-header">{{ team }}</li>
                         <li>
                             <a href="{% url 'hc-switch-team' team.user.username %}">Checks</a>
                         </li>
                         <li role="separator" class="divider"></li>
-                        {% endfor %} -->
+                        {% endfor %}
 
                         <li><a href="{% url 'hc-logout' %}">Log Out</a></li>
                     </ul>

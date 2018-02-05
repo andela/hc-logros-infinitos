@@ -24,32 +24,13 @@
             <div class="panel-body settings-block">
                 <form method="post">
                     {% csrf_token %}
-                    <h2>Periodic Reports</h2>
+                    <h2>Monthly Reports</h2>
                     <label>
                         <input
                             name="reports_allowed"
-                            type="radio"
-                            value="monthly"
-                            {% if profile.reports_allowed == "monthly" %} checked{% endif %}>
-                            Monthly
-                        <input
-                            name="reports_allowed"
-                            type="radio"
-                            value="weekly"
-                            {% if profile.reports_allowed == "weekly" %} checked {% endif %}>
-                            Weekly
-                        <input
-                            name="reports_allowed"
-                            type="radio"
-                            value="daily"
-                            {% if profile.reports_allowed == "daily" %} checked{% endif %}>
-                            daily
-                        <input
-                            name="reports_allowed"
-                            type="radio"
-                            value="instant"
-                            {% if profile.reports_allowed == "instant" %} checked{% endif %}>
-                            instant
+                            type="checkbox"
+                            {% if profile.reports_allowed %} checked {% endif %}>
+                        Each month send me a summary of my checks
                     </label>
                     <button
                         name="update_reports_allowed"
@@ -91,7 +72,6 @@
                         <tr>
                             <td>{{ member.user.email }} </td>
                             <td>Member</td>
-                            
                             <td>
                                 <a
                                     href="#"
@@ -265,8 +245,6 @@
     </div>
 </div>
 
-
-
 <div id="invite-team-member-modal" class="modal">
     <div class="modal-dialog">
         <form method="post" class="form-horizontal">
@@ -280,7 +258,6 @@
                     <ul>
                         <li>Team Members can create and manage Checks and Integrations</li>
                         <li>Only the team owner (you) can view and edit billing settings</li>
-                        <li>Team Members can only access the checks assigned to them</li>
                     </ul>
                     <div class="form-group">
                         <label for="itm-email" class="col-sm-2 control-label">Email</label>
@@ -292,26 +269,6 @@
                                 name="email"
                                 placeholder="friend@example.org">
                         </div>
-                    </div>
-                    <div>
-                        <p><strong> Assign checks:</strong></span></p>
-
-                        {% for check in checks %}
-                            <ul>
-                                <li>
-                                    <input
-                                        name= {% if check.name == "" %}
-                                        
-                                        {{check.code }}
-                                        {% else %}
-                                        {{ check.name }} {% endif %}
-
-                                        type="checkbox"/>
-                                    {{ loop.index }}{{ check.name|default:"unnamed" }}
-                                </li>
-                            </ul>
-                            
-                        {% endfor %}
                     </div>
                 </div>
                 <div class="modal-footer">
