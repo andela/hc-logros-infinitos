@@ -66,21 +66,11 @@ def blogs(request, cat_id=None, blog_id=None):
 
         else:
             blog = Blog.objects.get(id=blog_id)
-            if request.method == "POST":
-
-                if "share-blog" in request.POST:
-                    form = ShareBlogForm(request.POST)
-                    if form.is_valid():
-                # send an email
-                        email = form.cleaned_data["email"]
-
-                        send_blog_link(email, blog_id)
-                        messages.success(request, "Blog link shared to %s" % email)
             ctx = {
                 "blog": blog,
                 "id": blog_id
                 } 
-            return render(request, "blogs/single_blog.html", ctx)
+            return render(request, "blogs/single_blog.html", ctx)  
 
     elif request.method == "POST":
         form = CreateBlogForm(request.POST)
@@ -95,22 +85,16 @@ def blogs(request, cat_id=None, blog_id=None):
 
             return redirect("hc-blog")
 
-    # elif request.method == "DELETE":
-    #     blog = Blog.objects.get(id=blog_id)
-    #     blog.delete()
-    #     messages.info(request, "Blog deleted!")
-    #     return redirect("hc-blog")
-
     ctx = {"page": "blog", "form": form, "id": cat_id}
     return render(request, "blogs/add_blog.html", ctx)
 
-def send_blog_link(self, blog_id, inviting_profile=None):
-    path = reverse("hc-single-blog", kwargs={'blog_id':blog_id})
+def send_blog_link(self, blog_id, cat_id, inviting_profile=None):
+    path = reverse("hc-single-blog", kwargs={'blog_id':blog_id,'cat_id':cat_id})
     ctx = {
         "blog_link": settings.SITE_ROOT + path,
         "inviting_profile": inviting_profile,
     }
-    emails.share_blog(self, ctx, blog_id)
+    emails.share_blog(self, ctx, blog_id,cat_id)
 
 def view_blogs(request):
     q = Blog.objects.filter(author=request.team.user)
@@ -123,19 +107,18 @@ def view_blogs(request):
     }
     return render(request, "blogs/view_blog.html", ctx)
 
-# def single_blog(request, blog_id): 
-#     if request.method == "POST":
-#         if "share-blog" in request.POST:
-#             form = ShareBlogForm(request.POST)
-#             if form.is_valid():
-#                 # send an email
-#                 email = form.cleaned_data["email"]
-
-#             send_blog_link(email, blog_id)
-#             messages.success(request, "Blog link shared to %s" % email)
-
-#     ctx = {
-#         "blog": blog,
-#         "id": blog_id
-#     } 
-#     return render(request, "blogs/single_blog.html", ctx)
+def share_blog(request, blog_id, cat_id): 
+    blog = Blog.objects.get(id=blog_id)
+    if request.method == "POST":
+        if "share-blog" in request.POST:
+            form = ShareBlogForm(request.POST)
+            if form.is_valid():
+                # send an email
+                email = form.cleaned_data["email"]
+            send_blog_link(email, blog_id, cat_id)
+            messages.success(request, "Blog link shared to %s" % email)
+    ctx = {
+                "blog": blog,
+                "id": blog_id
+            } 
+    return render(request, "blogs/single_blog.html", ctx)  

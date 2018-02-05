@@ -16,4 +16,4 @@ class LowercaseEmailField(forms.EmailField):
         return value.lower()
     
 class ShareBlogForm(forms.Form):
-    email = LowercaseEmailField()
+    email = LowercaseEmailField(required=True)

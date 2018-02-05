@@ -34,7 +34,7 @@
 
 <div id="share-blog-modal" class="modal">
         <div class="modal-dialog">
-            <form method="post" class="form-horizontal">
+            <form method="post" action="{% url 'hc-share-blog' cat_id=blog.category.id blog_id=blog.id %}" class="form-horizontal">
                 {% csrf_token %}
                 <div class="modal-content">
                     <div class="modal-header">
@@ -46,13 +46,14 @@
                             <li>Share your blog via email</li>
                         </ul>
                         <div class="form-group">
-                            <label for="itm-email" class="col-sm-2 control-label">Email</label>
+                            <label for="itm-email" class="col-sm-2 control-label" required>Email</label>
                             <div class="col-sm-9">
                                 <input
                                     type="email"
                                     class="form-control"
                                     id="itm-email"
                                     name="email"
+                                    required
                                     placeholder="friend@example.org">
                             </div>
                         </div>
