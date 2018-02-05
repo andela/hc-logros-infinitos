@@ -19,7 +19,6 @@ channel_urls = [
     url(r'^add_slack/$', views.add_slack, name="hc-add-slack"),
     url(r'^add_slack_btn/$', views.add_slack_btn, name="hc-add-slack-btn"),
     url(r'^add_hipchat/$', views.add_hipchat, name="hc-add-hipchat"),
-    url(r'^add_sms/$', views.add_sms, name="hc-add-sms"),    
     url(r'^add_pushbullet/$', views.add_pushbullet, name="hc-add-pushbullet"),
     url(r'^add_pushover/$', views.add_pushover, name="hc-add-pushover"),
     url(r'^add_victorops/$', views.add_victorops, name="hc-add-victorops"),
@@ -32,7 +31,6 @@ channel_urls = [
 urlpatterns = [
     url(r'^$', views.index, name="hc-index"),
     url(r'^checks/$', views.my_checks, name="hc-checks"),
-    url(r'^checks/team$', views.team_checks, name="hc-team-checks"),
     url(r'^checks/add/$', views.add_check, name="hc-add-check"),
     url(r'^checks/([\w-]+)/', include(check_urls)),
     url(r'^integrations/', include(channel_urls)),

@@ -1,5 +1,4 @@
 from django.test.utils import override_settings
-from django.contrib.auth.models import User
 
 from hc.api.models import Channel
 from hc.test import BaseTestCase
@@ -39,39 +38,4 @@ class AddChannelTestCase(BaseTestCase):
             self.assertContains(r, "Integration Settings", status_code=200)
 
     ### Test that the team access works
-    def test_team_access_channel_works(self):
-        alice = User.objects.get(email="alice@example.org")
-        self.client.login(username="bob@example.org", password="password")
-        url ="/integrations/add/"
-        form = {"kind": "email", "value":"bob@example.org"}
-        r = self.client.post(url, form)
-        self.client.logout()
-        self.client.login(username="alice@example.org", password="password")
-        q = Channel.objects.filter(user= alice, value="bob@example.org")
-        self.assertEqual(q.count(), 1)        
-        self.assertEqual(r.status_code, 302)
-  
-    def test_sms_works(self):
-        """ test sms access"""
-        alice_channel = User.objects.get(email="alice@example.org")
-        alice_before = Channel.objects.filter(user=alice_channel).count()
-        self.client.login(username="bob@example.org", password="password")
-        url = "/integrations/add/"
-        form = {"kind": "sms"}
-        self.client.post(url, form)
-        alice_after = Channel.objects.filter(user=alice_channel).count()
-        self.assertEqual(alice_after, (alice_before + 1))
-
     ### Test that bad kinds don't work
-    def test_bad_kinds_dont_work(self):
-        """Test that an improper integration can not be added"""
-
-        url = "/integrations/add/"
-        form = {"kind": "whatsapp", "value": "alice@example.org"}
-
-        self.client.login(username="alice@example.org", password="password")
-        r = self.client.post(url, form)
-        self.assertEqual(r.status_code, 400)
-
-        q = Channel.objects.filter(value="alice@example.org")
-        self.assertEqual(q.count(), 0)

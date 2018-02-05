@@ -1,8 +1,5 @@
 # healthchecks
 
-[![Build Status](https://travis-ci.org/andela/hc-logros-infinitos.svg?branch=ch-build-coverage-badges-154167598)](https://travis-ci.org/andela/hc-logros-infinitos)
-[![Coverage Status](https://coveralls.io/repos/github/andela/hc-logros-infinitos/badge.svg?branch=ch-build-coverage-badges-154167598)](https://coveralls.io/github/andela/hc-logros-infinitos?branch=ch-build-coverage-badges-154167598)
-
 ![Screenshot of Welcome page](/stuff/screenshots/welcome.png?raw=true "Welcome Page")
 
 ![Screenshot of My Checks page](/stuff/screenshots/my_checks.png?raw=true "My Checks Page")

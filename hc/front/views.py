@@ -1,7 +1,6 @@
 from collections import Counter
 from datetime import timedelta as td
 from itertools import tee
-from .aes import AESCipher
 
 import requests
 from django.conf import settings
@@ -18,7 +17,7 @@ from hc.api.decorators import uuid_or_400
 from hc.api.models import DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
 from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,
                             TimeoutForm)
-from hc.accounts.models import Member 
+
 
 # from itertools recipes:
 def pairwise(iterable):
@@ -27,48 +26,12 @@ def pairwise(iterable):
     next(b, None)
     return zip(a, b)
 
-def team_checks(request):
-    
-    q = Member.objects.filter(user=request.user)
-    qs = list(q)
-    checks = []
-    for mem in qs:
-        ch = Check.objects.filter(name=mem.hcheck).first()
-        if ch is not None:
-            checks.append(ch) 
-
-    counter = Counter()
-    down_tags, grace_tags = set(), set()
-    
-    for check in checks:
-        status = check.get_status()
-        for tag in check.tags_list():
-            if tag == "":
-                continue
-
-            counter[tag] += 1
-
-            if status == "down":
-                down_tags.add(tag)
-            elif check.in_grace_period():
-                grace_tags.add(tag)
-
-    ctx = {
-        "page": "team_checks",
-        "checks": checks,
-        "now": timezone.now(),
-        "tags": counter.most_common(),
-        "down_tags": down_tags,
-        "grace_tags": grace_tags,
-        "ping_endpoint": settings.PING_ENDPOINT
-    }
-    
-    return render(request, "front/teamchecks.html", ctx)
 
 @login_required
 def my_checks(request):
-    q = Check.objects.filter(user=request.team.user).order_by("created").order_by("priority")
+    q = Check.objects.filter(user=request.team.user).order_by("created")
     checks = list(q)
+
     counter = Counter()
     down_tags, grace_tags = set(), set()
     for check in checks:
@@ -181,17 +144,8 @@ def update_name(request, code):
 
     form = NameTagsForm(request.POST)
     if form.is_valid():
-        check_name = form.cleaned_data["name"]
-        tags = form.cleaned_data["tags"]
-        priority = form.cleaned_data["priority"]
-
-        check.name = check_name
-        check.tags = tags
-        if priority:
-            check.priority = priority
-        else:
-            check.priority = check.priority
-            
+        check.name = form.cleaned_data["name"]
+        check.tags = form.cleaned_data["tags"]
         check.save()
 
     return redirect("hc-checks")
@@ -210,8 +164,6 @@ def update_timeout(request, code):
     if form.is_valid():
         check.timeout = td(seconds=form.cleaned_data["timeout"])
         check.grace = td(seconds=form.cleaned_data["grace"])
-        check.nag_interval = td(seconds=form.cleaned_data["nag_interval"])
-        check.nag_mode = form.cleaned_data["nag_mode"]
         check.save()
 
     return redirect("hc-checks")
@@ -323,14 +275,10 @@ def channels(request):
 
         channel.checks = new_checks
         return redirect("hc-channels")
+
     channels = Channel.objects.filter(user=request.team.user).order_by("created")
     channels = channels.annotate(n_checks=Count("checks"))
-    for channel in channels:
-        if channel.kind == "sms":
-            new_cipher = AESCipher(key='mykey')
-            channel.value = new_cipher.decrypt(channel.value)
 
-    
     num_checks = Check.objects.filter(user=request.team.user).count()
 
     ctx = {
@@ -347,10 +295,6 @@ def do_add_channel(request, data):
     form = AddChannelForm(data)
     if form.is_valid():
         channel = form.save(commit=False)
-        if channel.kind == "sms":
-            cipher = AESCipher(key='mykey')
-            channel.value = cipher.encrypt(channel.value)
-
         channel.user = request.team.user
         channel.save()
 
@@ -361,13 +305,14 @@ def do_add_channel(request, data):
 
         return redirect("hc-channels")
     else:
-        print(form.errors)
         return HttpResponseBadRequest()
+
 
 @login_required
 def add_channel(request):
     assert request.method == "POST"
     return do_add_channel(request, request.POST)
+
 
 @login_required
 @uuid_or_400
@@ -377,7 +322,7 @@ def channel_checks(request, code):
         return HttpResponseForbidden()
 
     assigned = set(channel.checks.values_list('code', flat=True).distinct())
-    checks = Check.objects.filter(user=request.team.user).order_by("created").order_by("priority")
+    checks = Check.objects.filter(user=request.team.user).order_by("created")
 
     ctx = {
         "checks": checks,
@@ -488,10 +433,6 @@ def add_hipchat(request):
     ctx = {"page": "channels"}
     return render(request, "integrations/add_hipchat.html", ctx)
 
-@login_required
-def add_sms(request):
-    ctx = {"page": "channels"}
-    return render(request, "integrations/add_sms.html", ctx)
 
 @login_required
 def add_pushbullet(request):
