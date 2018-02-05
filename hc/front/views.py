@@ -67,9 +67,8 @@ def team_checks(request):
 
 @login_required
 def my_checks(request):
-    q = Check.objects.filter(user=request.team.user).order_by("created")
+    q = Check.objects.filter(user=request.team.user).order_by("created").order_by("priority")
     checks = list(q)
-    print(checks)
     counter = Counter()
     down_tags, grace_tags = set(), set()
     for check in checks:
@@ -182,8 +181,17 @@ def update_name(request, code):
 
     form = NameTagsForm(request.POST)
     if form.is_valid():
-        check.name = form.cleaned_data["name"]
-        check.tags = form.cleaned_data["tags"]
+        check_name = form.cleaned_data["name"]
+        tags = form.cleaned_data["tags"]
+        priority = form.cleaned_data["priority"]
+
+        check.name = check_name
+        check.tags = tags
+        if priority:
+            check.priority = priority
+        else:
+            check.priority = check.priority
+            
         check.save()
 
     return redirect("hc-checks")
@@ -369,7 +377,7 @@ def channel_checks(request, code):
         return HttpResponseForbidden()
 
     assigned = set(channel.checks.values_list('code', flat=True).distinct())
-    checks = Check.objects.filter(user=request.team.user).order_by("created")
+    checks = Check.objects.filter(user=request.team.user).order_by("created").order_by("priority")
 
     ctx = {
         "checks": checks,
