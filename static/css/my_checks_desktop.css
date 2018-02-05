@@ -194,9 +194,21 @@ input[type='radio']:checked:after {
     top: -2px;
     left: -1px;
     position: relative;
-    background-color: #ffa500;
     content: '';
     display: inline-block;
     visibility: visible;
     border: 2px solid white;
 }
+
+input[id="high"]:checked:after{
+    background-color: #d9534f; 
+}
+
+input[id="medium"]:checked:after{
+    background-color: #f0ad4e; 
+}
+
+input[id="low"]:checked:after{
+    background-color: #5bc0de; 
+}
+
