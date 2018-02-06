@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
+from hc.accounts.models import Profile
 from django.http import Http404, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -95,6 +96,40 @@ def my_checks(request):
     }
 
     return render(request, "front/my_checks.html", ctx)
+
+@login_required
+def my_reports(request):
+    profile = request.user.profile
+    q = Check.objects.filter(user=request.team.user)
+    q = q.filter(last_ping__isnull=False)
+    checks = list(q)
+    counter = Counter()
+    down_tags, grace_tags = set(), set()
+    for check in checks:
+        status = check.get_status()
+        for tag in check.tags_list():
+            if tag == "":
+                continue
+
+            counter[tag] += 1
+
+            if status == "down":
+                down_tags.add(tag)
+            elif check.in_grace_period():
+                grace_tags.add(tag)
+
+    ctx = {
+        "page": "reports",
+        "checks": checks,
+        "now": timezone.now(),
+        "tags": counter.most_common(),
+        "down_tags": down_tags,
+        "grace_tags": grace_tags,
+        "reports_allowed": profile.reports_allowed,
+        "ping_endpoint": settings.PING_ENDPOINT
+    }
+
+    return render(request, "front/reports.html", ctx)
 
 
 def _welcome_check(request):
