@@ -29,17 +29,15 @@
     
         </div>
     <div class="col-sm-10">
-            <h2 style="color:rgb(24, 194, 137);" class="text-center">
+            <h1 style="color:black;">
                     {% if request.team == request.user.profile %}
-                       <u>{{category.name}}</u>
+                       {{category.name}}
+                       <br><br><hr>
                     {% else %}
                         {{ request.team.team_name }}
                     {% endif %}
-                    <a href="#" data-toggle="modal"
-                    data-target="#delete-category-modal"
-                    class="btn btn-link" style="color:rgb(209, 61, 61);">
-                    <span class="glyphicon glyphicon-trash" ></span></a>
-                </h2>
+                    
+                </h1>
         </hr>
     {% if blogs %}
     {% for blog in blogs %}
@@ -51,11 +49,15 @@
         <span class='blog-meta'>Created: {{blog.created_date|timesince}} ago</span><br><br>
         <span class='blog-meta'>Author: {{blog.author.email}}</span><br><br>   
         <div>
+                {% if blog.author == user %}
             <form method="get" action="{% url 'hc-single-blog' cat_id=category.id blog_id=blog.id %}">
                 {% csrf_token %}
                 <button type="submit" name="delete-blog" data-method="DELETE" class="btn btn-danger btn-sm" >
+                   
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</button>
+                
             </form>
+            {% endif %}
         </div>
         
     {% endfor %}
@@ -64,14 +66,21 @@
     <div class="alert alert-info">You don't have any posts in this category yet.</div>
     {% endif %}
     <div class="row">
-        </br></div><br>
-        <form method="post" action="{% url 'hc-add-blog' cat_id=category.id%}" class="text-center">
-                {% csrf_token %}
-                <input type="submit" class="btn btn-primary btn-lg" value="Add Post">
-            </form>
+        <br><br>
+            <div class="col-xs-6 text-left"> 
+            <form method="post" action="{% url 'hc-add-blog' cat_id=category.id%}">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-primary btn-md" value="Add Post">
+                </form> 
+            </div>
+                <div class="col-xs-6 text-right">
+                    <a href="#" data-toggle="modal"
+                    data-target="#delete-category-modal"
+                    class="btn btn-danger"> Delete Category</a>
+                </div>     
     </div>
-
-    </div>
+        
+        
 </div>
 </div>
 <div id="delete-category-modal" class="modal">
