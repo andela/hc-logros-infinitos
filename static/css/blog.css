@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css?family=Gafata');
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Open+Sans+Condensed:300');
+.blog-container{
+    width: 100%;
+    margin: 0 auto;
+}
+.wmd-input {
+    height: 200px !important;
+    width: 100% !important;
+    background-color: white !important;
+    border: 1px solid DarkGray;
+    right: 150px;
+}    
+
+.message {
+    font-family: 'Gafata', sans-serif;
+    text-align: justify;
+    width: 80%;
+    margin: 0 auto;
+}
+.blog-container form{
+    width: 80%;
+    margin: 0 auto;
+}
+
+.blog-container form label{
+    font-family: 'Gafata', sans-serif;
+    font-size: 1.4em;
+}
+.blog-container form .errorlist li{
+    color: red;
+}
+
+.blog-container form .wmd-wrapper{
+    width: 100%;
+    margin: 0 auto;
+}
+.blog-container form .wmd-wrapper .wmd-panel {
+    margin-left: 0% !important;
+    margin-right: 0% !important;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.blog-submit{
+    width: 100%;
+    margin: 0 auto;
+}
+
+.blog-submit button{
+    float: right;
+}
+.markdown p{
+    font-weight: inherit;
+    font-weight: 300;
+    text-align: justify;
+    color: #222;
+    font-size: 1.2em;
+}
+.blog-title{
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #333;
+}
+
+.blog-title h2{
+    font-size: 1.3em;
+    font-weight: 500;
+}
+
+.blog-meta{
+    color: #4a4747;
+    font-size: .8em;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    font-weight: 100;
+}
+
+.blog-del{
+    background: #de5252;
+    border: #de5252;
+    color: #FFF;
+    letter-spacing: .2em;
+    padding: 0.5em 0.5em;
+    text-transform: uppercase;
+    font-weight: 100;
+    transition: background .5s ease-in;
+}
+.blog-del:hover{
+    border:2px solid #de5252;
+    background: transparent;
+    color: #333;
+}
+.wrapper {
+    display: flex;
+}
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    height: 100vh;
+}

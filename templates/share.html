@@ -49,7 +49,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand"
-                href="{% url 'hc-index' %}"
+                href="#"
                 title="healthchecks.io - Monitor Cron Jobs">
                 {% if request.user.is_authenticated %}
                 <img
@@ -69,90 +69,24 @@
                     alt="healthchecks.io">
                 {% endif %}
             </a>
-
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul id="nav-main-sections" class="nav navbar-nav">
-                {% if request.user.is_authenticated %}
-                    <li {% if page == 'checks' %} class="active" {% endif %}>
-                        <a href="{% url 'hc-checks' %}">Checks</a>
-                    </li>
-                    <li {% if page == 'team_checks' %} class="active" {% endif %}>
-                        <a href="{% url 'hc-team-checks' %}">Team Checks</a>
-                    </li>
-                    <li {% if page == 'channels' %} class="active" {% endif %}>
-                        <a href="{% url 'hc-channels' %}">Integrations</a>
-                    </li>
-
-                {% endif %}
-
-
-                {% if show_pricing %}
-                <li {% if page == 'pricing' %} class="active" {% endif %}>
-                    <a href="{% url 'hc-pricing' %}">Pricing</a>
-                </li>
-                {% endif %}
-
-                <li {% if page == 'docs' %} class="active" {% endif %}>
-                    <a href="{% url 'hc-docs' %}">Docs</a>
-                </li>
-
-                <li {% if page == 'about' %} class="active" {% endif %}>
-                    <a href="{% url 'hc-about' %}">About</a>
-                </li>
-                {% if request.user.is_authenticated %}
-                <li {% if page == 'blog' %} class="active" {% endif %}>
-                    <a href="{% url 'hc-blog' %}">Blog</a>
-                </li>
-                {% endif %}
+            </div>
+            {% if request.user.is_authenticated %}
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{% url 'hc-blog' %}">BLOGS</a></li>
             </ul>
 
-
-            {% if request.user.is_authenticated %}
             {% else %}
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="{% url 'hc-login' %}">Log In</a></li>
-            </ul>
-            {% endif %}
-
-            {% if request.user.is_authenticated %}
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a id="nav-email" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
-                        {{ request.team }} <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        {% if request.teams %}
-                        <li class="dropdown-header">{{ request.user.profile }}</li>
-                        <li>
-                            <a href="{% url 'hc-switch-team' request.user.username %}" class="active">Checks</a>
-                        </li>
-                        {% endif %}
-
-                        <li><a href="{% url 'hc-profile' %}">Account Settings</a></li>
-                        <li role="separator" class="divider"></li>
-
-                        <!-- {% for team in request.teams %}
-                        <li class="dropdown-header">{{ team }}</li>
-                        <li>
-                            <a href="{% url 'hc-switch-team' team.user.username %}">Checks</a>
-                        </li>
-                        <li role="separator" class="divider"></li>
-                        {% endfor %} -->
-
-                        <li><a href="{% url 'hc-logout' %}">Log Out</a></li>
-                    </ul>
-                </li>
-            </ul>
-            {% endif %}
-        </div>
-
-        </div>
-    </nav>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://add-blog-app.herokuapp.com/">Log In</a></li>
+                </ul>
+                {% endif %}
+            </div>
+            </nav>
 
     {% block containers %}
     <div class="container">
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </div>
     {% endblock %}
 
@@ -170,7 +104,6 @@
         </div>
     </footer>
 
-    {% block blog_head%} {% endblock %}
 
     {% block scripts %}
     {% compress js %}
