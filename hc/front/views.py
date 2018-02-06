@@ -18,7 +18,7 @@ from hc.api.decorators import uuid_or_400
 from hc.api.models import DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
 from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,
                             TimeoutForm)
-
+from hc.accounts.models import Member 
 
 # from itertools recipes:
 def pairwise(iterable):
@@ -27,12 +27,48 @@ def pairwise(iterable):
     next(b, None)
     return zip(a, b)
 
+def team_checks(request):
+    
+    q = Member.objects.filter(user=request.user)
+    qs = list(q)
+    checks = []
+    for mem in qs:
+        ch = Check.objects.filter(name=mem.hcheck).first()
+        if ch is not None:
+            checks.append(ch) 
+
+    counter = Counter()
+    down_tags, grace_tags = set(), set()
+    
+    for check in checks:
+        status = check.get_status()
+        for tag in check.tags_list():
+            if tag == "":
+                continue
+
+            counter[tag] += 1
+
+            if status == "down":
+                down_tags.add(tag)
+            elif check.in_grace_period():
+                grace_tags.add(tag)
+
+    ctx = {
+        "page": "team_checks",
+        "checks": checks,
+        "now": timezone.now(),
+        "tags": counter.most_common(),
+        "down_tags": down_tags,
+        "grace_tags": grace_tags,
+        "ping_endpoint": settings.PING_ENDPOINT
+    }
+    
+    return render(request, "front/teamchecks.html", ctx)
 
 @login_required
 def my_checks(request):
-    q = Check.objects.filter(user=request.team.user).order_by("created")
+    q = Check.objects.filter(user=request.team.user).order_by("created").order_by("priority")
     checks = list(q)
-
     counter = Counter()
     down_tags, grace_tags = set(), set()
     for check in checks:
@@ -145,8 +181,17 @@ def update_name(request, code):
 
     form = NameTagsForm(request.POST)
     if form.is_valid():
-        check.name = form.cleaned_data["name"]
-        check.tags = form.cleaned_data["tags"]
+        check_name = form.cleaned_data["name"]
+        tags = form.cleaned_data["tags"]
+        priority = form.cleaned_data["priority"]
+
+        check.name = check_name
+        check.tags = tags
+        if priority:
+            check.priority = priority
+        else:
+            check.priority = check.priority
+            
         check.save()
 
     return redirect("hc-checks")
@@ -332,7 +377,7 @@ def channel_checks(request, code):
         return HttpResponseForbidden()
 
     assigned = set(channel.checks.values_list('code', flat=True).distinct())
-    checks = Check.objects.filter(user=request.team.user).order_by("created")
+    checks = Check.objects.filter(user=request.team.user).order_by("created").order_by("priority")
 
     ctx = {
         "checks": checks,

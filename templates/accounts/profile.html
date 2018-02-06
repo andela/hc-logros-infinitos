@@ -82,6 +82,7 @@
                         <tr>
                             <td>{{ member.user.email }} </td>
                             <td>Member</td>
+                            
                             <td>
                                 <a
                                     href="#"
@@ -255,6 +256,8 @@
     </div>
 </div>
 
+
+
 <div id="invite-team-member-modal" class="modal">
     <div class="modal-dialog">
         <form method="post" class="form-horizontal">
@@ -268,6 +271,7 @@
                     <ul>
                         <li>Team Members can create and manage Checks and Integrations</li>
                         <li>Only the team owner (you) can view and edit billing settings</li>
+                        <li>Team Members can only access the checks assigned to them</li>
                     </ul>
                     <div class="form-group">
                         <label for="itm-email" class="col-sm-2 control-label">Email</label>
@@ -279,6 +283,26 @@
                                 name="email"
                                 placeholder="friend@example.org">
                         </div>
+                    </div>
+                    <div>
+                        <p><strong> Assign checks:</strong></span></p>
+
+                        {% for check in checks %}
+                            <ul>
+                                <li>
+                                    <input
+                                        name= {% if check.name == "" %}
+                                        
+                                        {{check.code }}
+                                        {% else %}
+                                        {{ check.name }} {% endif %}
+
+                                        type="checkbox"/>
+                                    {{ loop.index }}{{ check.name|default:"unnamed" }}
+                                </li>
+                            </ul>
+                            
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="modal-footer">
