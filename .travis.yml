@@ -5,8 +5,8 @@ install:
     - pip install -r requirements.txt
     - pip install braintree coveralls mock mysqlclient
 env:
-  - DB=postgres
   - SITE_ROOT="https://hclogros.herokuapp.com/"  
+  - DB=postgres
 addons:
   postgresql: "9.4"
 before_script:
