@@ -84,8 +84,7 @@ def blogs(request, cat_id=None, blog_id=None):
             blog.save()
 
             return redirect("hc-blog")
-
-    ctx = {"page": "blog", "form": form, "id": cat_id}
+    ctx = {"page": "blog", "form": form, "id": cat_id}   
     return render(request, "blogs/add_blog.html", ctx)
 
 def send_blog_link(self, blog_id, cat_id, inviting_profile=None):
