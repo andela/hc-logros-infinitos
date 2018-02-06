@@ -18,6 +18,7 @@ STATUSES = (
     ("paused", "Paused"),
     ("often", "Often")
 )
+PRIORITIES = ((0, "High"), (1, "Medium"), (2, "Low"), (3, "None"))
 DEFAULT_TIMEOUT = td(days=1)
 DEFAULT_GRACE = td(hours=1)
 DEFAULT_NAG = td(hours=1)
@@ -46,6 +47,7 @@ class Check(models.Model):
     code = models.UUIDField(default=uuid.uuid4, editable=False, db_index=True)
     user = models.ForeignKey(User, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
+    priority = models.IntegerField(default=3, choices=PRIORITIES)
     timeout = models.DurationField(default=DEFAULT_TIMEOUT)
     grace = models.DurationField(default=DEFAULT_GRACE)
     nag_after = models.DateTimeField(null=True, blank=True)
@@ -119,6 +121,7 @@ class Check(models.Model):
 
         result = {
             "name": self.name,
+            "priority": self.priority,
             "ping_url": self.url(),
             "pause_url": settings.SITE_ROOT + pause_rel_url,
             "tags": self.tags,
