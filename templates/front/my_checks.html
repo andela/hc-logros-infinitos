@@ -107,14 +107,14 @@
                                 Priority
                             </label>
                             <div class="col-sm-9">
-                                <div class="radio" >
-                                    <label><input type="radio" id="high" name="priority" value=0>High</label>
+                                <div class="radio">
+                                    <label><input type="radio" id="high" name="priority" value=1>High</label>
                                 </div>
                                 <div class="radio">
-                                    <label><input type="radio" id="medium" name="priority" value=1>Medium</label>
+                                    <label><input type="radio" id="medium" name="priority" value=2>Medium</label>
                                 </div>
                                 <div class="radio">
-                                    <label><input type="radio" id="low" name="priority" value=2>Low</label>
+                                    <label><input type="radio" id="low" name="priority" value=3>Low</label>
                                 </div>
                             </div>
                         </div>
@@ -348,19 +348,6 @@
 <script src="{% static 'js/nouislider.min.js' %}"></script>
 <script src="{% static 'js/clipboard.min.js' %}"></script>
 <script src="{% static 'js/checks.js' %}"></script>
-<!-- <script>
-    $(function(){
-        if ($('#check-0').length) {
-            $('#high').attr('checked', true);
-        }
-        else if ($('#check-1').length) {
-            $('#medium').attr('checked', true);
-        }
-        else if ($('#check-2').length) {
-            $('#low').attr('checked', true);
-        }
-    });
-</script> -->
 
 {% endcompress %}
 {% endblock %}
