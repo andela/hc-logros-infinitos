@@ -96,7 +96,7 @@ def send_blog_link(self, blog_id, cat_id, inviting_profile=None):
     emails.share_blog(self, ctx, blog_id,cat_id)
 
 def view_blogs(request):
-    q = Blog.objects.filter(author=request.team.user)
+    q = Blog.objects.filter()
     blogs = list(q)
     categories = Category.objects.all()        
     ctx = {
