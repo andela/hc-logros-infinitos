@@ -8,6 +8,7 @@ install:
 env:
   - DB=sqlite
   - DB=postgres
+  - SITE_ROOT="https://hclogros.herokuapp.com/"  
 addons:
   postgresql: "9.4"
 before_script:
