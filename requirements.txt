@@ -41,7 +41,7 @@ pylint==1.8.2
 PySocks==1.6.8
 python-dateutil==1.5
 pytz==2017.3
-PyYAML==3.12
+PyYAML==5.4
 rcssmin==1.0.6
 requests==2.18.4
 rjsmin==1.0.12
