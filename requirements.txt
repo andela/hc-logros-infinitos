@@ -27,7 +27,7 @@ idna==2.6
 isort==4.3.0
 kombu==4.1.0
 lazy-object-proxy==1.3.1
-lxml==4.1.1
+lxml==4.6.3
 mccabe==0.6.1
 mock==2.0.0
 Naked==0.1.31
