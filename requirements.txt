@@ -36,7 +36,7 @@ premailer==2.9.6
 psycopg2==2.7.3.2
 pycparser==2.18
 pycrypto==2.6.1
-PyJWT==1.5.3
+PyJWT==2.4.0
 pylint==1.8.2
 PySocks==1.6.8
 python-dateutil==1.5
